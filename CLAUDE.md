@@ -6,9 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Traigent SDK** is an enterprise-grade LLM optimization platform that helps developers find optimal AI configurations for their specific use cases. It provides zero-code integration through decorators and supports multiple execution modes (local, cloud, hybrid).
 
-## Core Architecture
+## Repository Structure
 
-### Main Package Structure (`traigent/`)
+This is a **sandbox environment** containing both the main Traigent SDK and development utilities:
+
+- **`Traigent/`** - Main SDK repository (primary development area)
+- **`quickstart/`** - Standalone quickstart examples and benchmark CLI tool  
+- **`sdk_validation_test/`** - SDK validation and testing environment
+- **Root-level scripts** - Validation and development utilities
+
+### Main Package Structure (`Traigent/traigent/`)
 - **`api/`** - Public API layer with decorators (`@traigent.optimize`) and functions
 - **`core/`** - Core orchestration logic and optimized function handling 
 - **`optimizers/`** - Optimization algorithms (grid, random, Bayesian, cloud-based)
@@ -31,13 +38,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Installation & Setup
 ```bash
-# Clone and basic setup
-git clone https://github.com/nimrodbusany/Traigent.git
+# Navigate to main SDK directory
 cd Traigent
+
+# Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
 
-# Install dependencies
+# Install dependencies (modular approach)
 pip install -r requirements/requirements.txt
 pip install -e .
 
@@ -47,12 +55,30 @@ pip install -r requirements/requirements-dev.txt
 # For framework integrations  
 pip install -r requirements/requirements-integrations.txt
 
-# For all features
+# For all features (enterprise bundle)
 pip install -r requirements/requirements-all.txt
+```
+
+### Quickstart Examples
+```bash
+# Run standalone quickstart examples (from project root)
+cd quickstart
+python hello_traigent.py
+python basic_optimization.py
+
+# Advanced benchmark CLI tool
+python traigent_benchmark_cli.py
+
+# Framework integration examples (from Traigent/)
+cd Traigent/examples/quickstart
+python hello_traigent.py
 ```
 
 ### Testing
 ```bash
+# All commands run from Traigent/ directory
+cd Traigent
+
 # Run all tests
 python -m pytest tests/
 
@@ -60,50 +86,71 @@ python -m pytest tests/
 python -m pytest tests/unit/     # Unit tests only
 python -m pytest tests/integration/  # Integration tests
 python -m pytest tests/e2e/     # End-to-end tests
+python -m pytest tests/security/  # Security tests
 
 # Quick smoke tests
 python -m pytest tests/unit/api/test_types.py -v -x
 
-# Run with coverage
+# Run with coverage (85% minimum enforced)
 python -m pytest tests/unit -q --cov=traigent --cov-report=html
 
 # Use the comprehensive test script
 ./scripts/run_tests.sh
+
+# Test markers for selective running
+python -m pytest -m "not slow"    # Skip slow tests
+python -m pytest -m "unit"        # Only unit tests
+python -m pytest -m "integration" # Only integration tests
 ```
 
 ### Code Quality
 ```bash
-# Format code
+# All linting tools configured in pyproject.toml
+cd Traigent
+
+# Format code (Black + Ruff)
 ruff format traigent/
 black traigent/
 
-# Lint code  
+# Lint code (Ruff + Flake8)  
 ruff check traigent/
 flake8 traigent/
 
-# Type checking
+# Type checking (strict mode enabled)
 mypy traigent/
 
-# Install pre-commit hooks
+# Run all linters at once
+./run_linters.sh
+
+# Install pre-commit hooks (includes all checks)
 pre-commit install
 ```
 
-### Running Examples & Playground
+### Validation & SDK Testing
 ```bash
-# Launch interactive UI
+# From project root - validate SDK fixes
+./validate_sdk_fixes.sh
+
+# Run examples validation by section
+./run_examples_by_section.sh
+```
+
+### Advanced Development Tools
+```bash
+# From Traigent/ directory
+
+# Launch interactive control center (Streamlit UI)
 python scripts/launch_control_center.py
 
-# Run basic examples
-cd examples/quickstart
-python hello_traigent.py
+# Run comprehensive project cleanup and analysis
+python scripts/project_cleanup.py
 
-# Run framework integration examples
-cd examples/integrations/langchain/examples/sentiment_classification
-python function.py
+# View TraiGent storage and results
+python scripts/view_traigent_storage.py
 
-# Run use case examples  
-cd examples/use-cases/by-domain/nlp/classification/sentiment_analysis_optimization
-python basic_sentiment_tuning.py
+# Validate documentation and implementation
+python scripts/validate_docs.py
+python scripts/validate_implementation.py
 ```
 
 ## Project Configuration
@@ -124,8 +171,13 @@ TRAIGENT_RESULTS_FOLDER=~/.traigent/results
 
 ### Key Configuration Files
 - **`pyproject.toml`** - Main project configuration with dependencies and tool settings
-- **`pytest.ini`** - Test configuration with coverage settings (85% minimum)
+  - Modular dependencies: core, analytics, bayesian, integrations, security, playground
+  - Tool configuration: Black, Ruff, MyPy, pytest, coverage
+  - Support for Python 3.8-3.12
+- **`pytest.ini`** - Test configuration with coverage settings (85% minimum enforced)
 - **`requirements/`** - Modular dependency management by feature set
+- **`mypy.ini`** - Strict type checking configuration
+- **`.env`** - Environment variables for API keys and execution modes
 
 ## API Usage Patterns
 
@@ -206,6 +258,27 @@ TraiGent automatically detects and optimizes:
 - Only aggregated usage patterns and performance metrics
 - Local storage option for complete privacy
 
+## Advanced Features
+
+### Parameter Injection System
+TraiGent's core innovation is **automatic parameter interception** during optimization:
+```python
+# TraiGent automatically intercepts these parameters during optimization
+response = openai.chat.completions.create(
+    model="gpt-3.5-turbo",  # Replaced with optimized value
+    temperature=0.7,        # Replaced with optimized value
+    messages=[...]
+)
+```
+
+### Benchmark CLI Tool
+The repository includes an advanced benchmarking tool at `quickstart/traigent_benchmark_cli.py`:
+- **Dynamic parameter space configuration** - GUI-driven selection of optimization parameters
+- **Advanced prompt engineering** - System roles, output formats, few-shot learning
+- **Mock mode support** - Cost-free testing with simulated LLM responses  
+- **Multi-execution modes** - Local, standard (hybrid), and cloud optimization
+- **Comprehensive analysis** - Results export and visualization
+
 ## Common Development Tasks
 
 ### Adding a New Optimizer
@@ -214,17 +287,19 @@ TraiGent automatically detects and optimizes:
 3. Register in `traigent/optimizers/registry.py`
 4. Add tests in `tests/unit/optimizers/`
 
-### Adding Custom Evaluators
-1. Inherit from `traigent/evaluators/base.py`
-2. Implement `evaluate()` method for your metrics
-3. Add to examples with dataset and configuration
+### Adding New Framework Integration
+1. Create plugin in `traigent/integrations/`
+2. Implement parameter interception logic in `framework_override.py`
+3. Add detection patterns for automatic framework recognition
+4. Create examples and tests
 
 ### Debugging Optimization Issues
 1. Check logs in `~/.traigent/logs/`
 2. Verify configuration space parameters
-3. Test with minimal dataset first
+3. Test with minimal dataset first  
 4. Use `execution_mode="local"` for debugging
 5. Check API key configuration in `.env`
+6. Use mock mode for cost-free debugging: `setup_mock_mode()`
 
 ## Performance Considerations
 
