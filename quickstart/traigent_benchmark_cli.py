@@ -26,7 +26,22 @@ import openai
 
 from load_env import load_demo_env
 from shared_utils.mock_llm import setup_mock_mode
-from mock_openai_patch import setup_mock_environment, patch_openai
+
+# Try to import mock_openai_patch, but don't fail if it's missing
+try:
+    from mock_openai_patch import setup_mock_environment, patch_openai
+except ImportError:
+    # Fallback implementation if mock_openai_patch is not available
+    def setup_mock_environment():
+        """Fallback mock environment setup"""
+        os.environ["TRAIGENT_MOCK_MODE"] = "true"
+        os.environ["SKIP_API_KEY_CHECK"] = "true"
+        
+    def patch_openai():
+        """Fallback OpenAI patch using TraiGent's built-in mocking"""
+        # TraiGent has its own mocking system, we'll rely on that
+        pass
+
 import traigent
 
 # Load environment variables first
