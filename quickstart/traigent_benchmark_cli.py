@@ -10,7 +10,6 @@ A configurable benchmarking tool for TraiGent optimization with support for:
 - Comprehensive results analysis and export
 """
 
-import asyncio
 import json
 import os
 import sys
@@ -19,24 +18,22 @@ import yaml
 import random
 import argparse
 from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import uuid
 
 import openai
-import pandas as pd
-
-# Add parent directory for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from load_env import load_demo_env
 from shared_utils.mock_llm import setup_mock_mode
+from mock_openai_patch import setup_mock_environment, patch_openai
 import traigent
-from traigent.utils.callbacks import StatisticsCallback
 
-# Load environment
+# Load environment variables first
 load_demo_env()
+
+# Add parent directory for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 BANNER = """
 🎯 TraiGent Advanced Benchmark CLI Tool
@@ -121,7 +118,7 @@ class DatasetLoader:
                     "input": example["input"], 
                     "output": example["output"]
                 }, f)
-                f.write("\\n")
+                f.write("\n")
             return f.name
 
 class ExampleSelector:
@@ -207,9 +204,9 @@ class PromptBuilder:
         format_instruction = self.output_formats.get(output_format, self.output_formats["single_word"])
         style_instruction = self.styles.get(style, "")
         
-        system_msg = f"{base_role}\\n\\n{format_instruction}"
+        system_msg = f"{base_role}\n\n{format_instruction}"
         if style_instruction:
-            system_msg += f"\\n\\n{style_instruction}"
+            system_msg += f"\n\n{style_instruction}"
         
         return system_msg
     
@@ -236,9 +233,9 @@ class PromptBuilder:
         # System message
         system_content = self.build_system_message(system_role, output_format, style)
         if context:
-            system_content += f"\\n\\nContext: {context}"
+            system_content += f"\n\nContext: {context}"
         if chain_of_thought:
-            system_content += "\\n\\nThink step by step before providing your answer."
+            system_content += "\n\nThink step by step before providing your answer."
         
         messages.append({"role": "system", "content": system_content})
         
@@ -365,7 +362,7 @@ class TraiGentBenchmarkCLI:
         
     def select_configuration_mode(self) -> str:
         """Select configuration mode"""
-        print("\\n📋 Configuration Mode:")
+        print("\n📋 Configuration Mode:")
         print("1. Quick Start (Presets)")
         print("2. Guided Configuration") 
         print("3. Advanced Configuration")
@@ -373,17 +370,17 @@ class TraiGentBenchmarkCLI:
         
         while True:
             try:
-                choice = input("\\nChoice (1-4): ").strip()
+                choice = input("\nChoice (1-4): ").strip()
                 if choice in ["1", "2", "3", "4"]:
                     return ["preset", "guided", "advanced", "load"][int(choice) - 1]
                 print("Please enter 1, 2, 3, or 4")
             except (ValueError, KeyboardInterrupt):
-                print("\\nExiting...")
+                print("\nExiting...")
                 sys.exit(0)
     
     def configure_dataset(self) -> Dict[str, Any]:
         """Configure dataset parameters"""
-        print("\\n📊 Dataset Configuration")
+        print("\n📊 Dataset Configuration")
         print("=" * 50)
         
         # Load dataset info
@@ -408,7 +405,7 @@ class TraiGentBenchmarkCLI:
                 print("Please enter a valid number")
         
         # Get sampling strategy
-        print("\\nSampling strategy:")
+        print("\nSampling strategy:")
         print("1. Stratified (balanced across difficulty levels)")
         print("2. Random sampling")
         print("3. Sequential (first N examples)")
@@ -422,7 +419,7 @@ class TraiGentBenchmarkCLI:
                 if strategy_choice == "1":
                     strategy = "stratified"
                     # Configure difficulty distribution
-                    print("\\nDifficulty distribution:")
+                    print("\nDifficulty distribution:")
                     per_level = num_examples // 4
                     remaining = num_examples % 4
                     
@@ -459,20 +456,20 @@ class TraiGentBenchmarkCLI:
     
     def configure_parameters(self) -> Dict[str, ParameterConfig]:
         """Configure parameter space"""
-        print("\\n🔧 Parameter Space Configuration")
+        print("\n🔧 Parameter Space Configuration")
         print("=" * 50)
         
         categories = self.parameter_registry.get_categories()
         selected_params = {}
         
         for category, param_names in categories.items():
-            print(f"\\n{category}:")
+            print(f"\n{category}:")
             include = input(f"Include {category} parameters? (y/n) [y]: ").strip().lower()
             
             if include not in ['n', 'no']:
                 for param_name in param_names:
                     param = self.parameter_registry.get_parameter(param_name)
-                    print(f"\\n  {param.name}: {param.description}")
+                    print(f"\n  {param.name}: {param.description}")
                     print(f"  Available values: {param.values}")
                     
                     # Ask if user wants to include this parameter
@@ -502,12 +499,23 @@ class TraiGentBenchmarkCLI:
                         if not num_values:
                             num_values = min(3, max_values)
                         else:
-                            num_values = int(num_values)
+                            try:
+                                num_values = int(num_values)
+                                # Ensure at least 1 value and not more than available
+                                num_values = max(1, min(num_values, max_values))
+                            except ValueError:
+                                print(f"  Invalid input, using default")
+                                num_values = min(3, max_values)
                         
                         if param.param_type == "boolean":
                             values = param.values
                         else:
                             values = param.values[:num_values]
+                    
+                    # Extra validation for critical parameters like model
+                    if param.name == "model" and len(values) == 0:
+                        print("  ⚠️  Model parameter must have at least one value, using default")
+                        values = [param.values[0]] if param.values else ["gpt-3.5-turbo"]
                     
                     # Create modified parameter config
                     selected_params[param_name] = ParameterConfig(
@@ -518,12 +526,41 @@ class TraiGentBenchmarkCLI:
                         description=param.description
                     )
         
+        # Validate we have at least some parameters
+        if not selected_params:
+            print("\n⚠️  No parameters selected, adding model with default values")
+            selected_params["model"] = ParameterConfig(
+                name="model",
+                param_type="categorical",
+                values=["gpt-3.5-turbo"],
+                enabled=True,
+                description="LLM model to use (default)"
+            )
+        
+        # Ensure all parameters have at least one value
+        for param_name, param in list(selected_params.items()):
+            if len(param.values) == 0:
+                print(f"⚠️  Parameter {param_name} has no values, removing it")
+                del selected_params[param_name]
+        
         # Calculate total configurations
         total_configs = 1
         for param in selected_params.values():
-            total_configs *= len(param.values)
+            if len(param.values) > 0:
+                total_configs *= len(param.values)
         
-        print(f"\\n📈 Total parameter combinations: {total_configs}")
+        if total_configs == 0:
+            print("\n❌ Error: No valid parameter combinations. Adding defaults.")
+            selected_params["model"] = ParameterConfig(
+                name="model",
+                param_type="categorical",
+                values=["gpt-3.5-turbo"],
+                enabled=True,
+                description="LLM model to use (default)"
+            )
+            total_configs = 1
+        
+        print(f"\n📈 Total parameter combinations: {total_configs}")
         
         if total_configs > 100:
             print("⚠️  Warning: Large number of configurations!")
@@ -540,13 +577,13 @@ class TraiGentBenchmarkCLI:
             strategy = "grid"
             max_trials = total_configs
         
-        print(f"\\nStrategy: {strategy}, Max trials: {max_trials}")
+        print(f"\nStrategy: {strategy}, Max trials: {max_trials}")
         
         return selected_params, strategy, max_trials
     
     def configure_execution(self) -> Dict[str, Any]:
         """Configure execution parameters"""
-        print("\\n⚙️  Execution Configuration")
+        print("\n⚙️  Execution Configuration")
         print("=" * 50)
         
         # Execution mode
@@ -563,8 +600,12 @@ class TraiGentBenchmarkCLI:
         else:
             mode = "local"
         
-        # Mock mode
-        mock_mode = input("Use mock mode (no API costs)? (y/n) [n]: ").strip().lower()
+        # Mock mode - default to environment setting if available
+        env_mock_mode = os.environ.get("TRAIGENT_MOCK_MODE", "").lower() == "true"
+        default_mock = "y" if env_mock_mode else "n"
+        mock_mode = input(f"Use mock mode (no API costs)? (y/n) [{default_mock}]: ").strip().lower()
+        if not mock_mode:  # If user just presses Enter, use default
+            mock_mode = default_mock
         mock_mode = mock_mode in ['y', 'yes']
         
         # Early stopping
@@ -579,7 +620,7 @@ class TraiGentBenchmarkCLI:
     
     def estimate_costs(self, config: Dict) -> Dict[str, Any]:
         """Estimate execution costs"""
-        print("\\n💰 Cost Estimation")
+        print("\n💰 Cost Estimation")
         print("=" * 50)
         
         total_configs = 1
@@ -609,10 +650,10 @@ class TraiGentBenchmarkCLI:
     
     def guided_configuration(self) -> ExperimentConfig:
         """Guided configuration wizard"""
-        print("\\n🧙 Guided Configuration Wizard")
+        print("\n🧙 Guided Configuration Wizard")
         
         # Experiment name
-        name = input("\\nExperiment name [benchmark_experiment]: ").strip()
+        name = input("\nExperiment name [benchmark_experiment]: ").strip()
         if not name:
             name = f"benchmark_experiment_{self.experiment_id}"
         
@@ -644,7 +685,7 @@ class TraiGentBenchmarkCLI:
     
     def show_config_summary(self, config: ExperimentConfig):
         """Show configuration summary"""
-        print("\\n📋 Configuration Summary")
+        print("\n📋 Configuration Summary")
         print("=" * 50)
         print(f"Experiment: {config.name}")
         print(f"Examples: {config.dataset['total_examples']}")
@@ -659,7 +700,7 @@ class TraiGentBenchmarkCLI:
             'execution': config.execution
         })
         
-        confirm = input("\\nProceed with this configuration? (y/n): ").strip().lower()
+        confirm = input("\nProceed with this configuration? (y/n): ").strip().lower()
         if confirm not in ['y', 'yes']:
             print("Configuration cancelled.")
             sys.exit(0)
@@ -691,11 +732,39 @@ class TraiGentBenchmarkCLI:
         with open(config_file, 'w') as f:
             yaml.dump(config_dict, f, default_flow_style=False)
         
-        print(f"\\n💾 Configuration saved to: {config_file}")
+        print(f"\n💾 Configuration saved to: {config_file}")
+    
+    def load_configuration(self, config_path: str) -> ExperimentConfig:
+        """Load configuration from YAML file"""
+        config_file = Path(config_path)
+        if not config_file.exists():
+            raise FileNotFoundError(f"Configuration file not found: {config_file}")
+        
+        with open(config_file, 'r') as f:
+            config_dict = yaml.safe_load(f)
+        
+        # Reconstruct ParameterConfigs
+        parameters = {}
+        for name, param_data in config_dict['parameters'].items():
+            parameters[name] = ParameterConfig(
+                name=name,
+                param_type=param_data['param_type'],
+                values=param_data['values'],
+                enabled=param_data['enabled'],
+                description=param_data.get('description', '')
+            )
+        
+        return ExperimentConfig(
+            name=config_dict['name'],
+            dataset=config_dict['dataset'],
+            parameters=parameters,
+            execution=config_dict['execution'],
+            output=config_dict['output']
+        )
     
     def execute_benchmark(self, config: ExperimentConfig):
         """Execute the benchmark using TraiGent's parameter injection"""
-        print("\\n🚀 Executing Benchmark...")
+        print("\n🚀 Executing Benchmark...")
         print("=" * 50)
         
         # Sample dataset based on configuration
@@ -728,7 +797,7 @@ class TraiGentBenchmarkCLI:
             config=config
         )
         
-        print(f"\\n🔄 Starting optimization with TraiGent...")
+        print(f"\n🔄 Starting optimization with TraiGent...")
         print(f"   Algorithm: {config.execution['algorithm']}")
         print(f"   Max trials: {config.execution['max_trials']}")
         print(f"   Mock mode: {config.execution['mock_mode']}")
@@ -745,7 +814,8 @@ class TraiGentBenchmarkCLI:
         
         # Set up mock mode if needed
         if config.execution['mock_mode']:
-            setup_mock_mode()
+            setup_mock_environment()  # Use the more robust mock setup
+            patch_openai()  # Ensure OpenAI is patched
         
         # Initialize prompt builder and example selector
         prompt_builder = PromptBuilder()
@@ -836,23 +906,55 @@ class TraiGentBenchmarkCLI:
                 self.config = self.guided_configuration()
                 
                 # Save configuration
-                save = input("\\nSave this configuration? (y/n) [y]: ").strip().lower()
+                save = input("\nSave this configuration? (y/n) [y]: ").strip().lower()
                 if save not in ['n', 'no']:
                     self.save_configuration(self.config)
                 
                 # Ask if user wants to run the benchmark
-                run_now = input("\\nRun benchmark now? (y/n) [y]: ").strip().lower()
+                run_now = input("\nRun benchmark now? (y/n) [y]: ").strip().lower()
                 if run_now not in ['n', 'no']:
                     optimized_function, dataset_file = self.execute_benchmark(self.config)
                     
-                    print("\\n🎯 Ready to run optimization!")
-                    print("Run the following to execute:")
-                    print("```python")
-                    print("import asyncio")
-                    print("results = await optimized_function.optimize()")
-                    print("print(f'Best config: {results.best_config}')")
-                    print("print(f'Best score: {results.best_score:.1%}')")
-                    print("```")
+                    print("\n🎯 Running optimization...")
+                    print("=" * 50)
+                    
+                    try:
+                        # Run the actual optimization
+                        import asyncio
+                        
+                        async def run_optimization():
+                            results = await optimized_function.optimize()
+                            return results
+                        
+                        # Execute the optimization
+                        results = asyncio.run(run_optimization())
+                        
+                        # Display results
+                        print("\n✅ Optimization Complete!")
+                        print("=" * 50)
+                        print(f"Best configuration found:")
+                        for key, value in results.best_config.items():
+                            print(f"  • {key}: {value}")
+                        print(f"\nBest score: {results.best_score:.1%}")
+                        
+                        # Show all trials if there are multiple
+                        if hasattr(results, 'trials') and len(results.trials) > 1:
+                            print(f"\n📊 All Trials ({len(results.trials)} total):")
+                            for i, trial in enumerate(results.trials, 1):
+                                if hasattr(trial, 'metrics') and 'score' in trial.metrics:
+                                    score = trial.metrics['score']
+                                elif hasattr(trial, 'score'):
+                                    score = trial.score
+                                else:
+                                    score = 0.0
+                                config = trial.config if hasattr(trial, 'config') else {}
+                                print(f"  Trial {i}: Score = {score:.1%}, Config = {config}")
+                        
+                    except Exception as e:
+                        print(f"\n❌ Optimization failed: {e}")
+                        import traceback
+                        if self.config.output.get('verbose', False):
+                            traceback.print_exc()
                     
                     # Clean up temporary file
                     try:
@@ -860,17 +962,61 @@ class TraiGentBenchmarkCLI:
                     except:
                         pass
                 else:
-                    print("\\n✅ Configuration saved! Use saved config to run benchmark later.")
+                    print("\n✅ Configuration saved! Use saved config to run benchmark later.")
                 
+            elif mode == "load":
+                config_path = input("\nEnter configuration file path: ").strip()
+                self.config = self.load_configuration(config_path)
+                print("\n✅ Configuration loaded!")
+                self.show_config_summary(self.config)
+                
+                # Immediately execute
+                optimized_function, dataset_file = self.execute_benchmark(self.config)
+                
+                print("\n🎯 Running optimization...")
+                print("=" * 50)
+                
+                try:
+                    import asyncio
+                    
+                    async def run_optimization():
+                        results = await optimized_function.optimize()
+                        return results
+                    
+                    results = asyncio.run(run_optimization())
+                    
+                    print("\n✅ Optimization Complete!")
+                    print("=" * 50)
+                    print(f"Best configuration found:")
+                    for key, value in results.best_config.items():
+                        print(f"  • {key}: {value}")
+                    print(f"\nBest score: {results.best_score:.1%}")
+                    
+                    if hasattr(results, 'trials') and len(results.trials) > 1:
+                        print(f"\n📊 All Trials ({len(results.trials)} total):")
+                        for i, trial in enumerate(results.trials, 1):
+                            print(f"  Trial {i}: Score = {trial.score:.1%}, Config = {trial.config}")
+                
+                except Exception as e:
+                    print(f"\n❌ Optimization failed: {e}")
+                    import traceback
+                    traceback.print_exc()
+                
+                # Clean up
+                try:
+                    os.unlink(dataset_file)
+                except:
+                    pass
+            
             else:
-                print(f"\\n{mode.title()} mode not yet implemented.")
-                print("Use guided mode (option 2) for now.")
+                print(f"\n{mode.title()} mode not yet implemented.")
+                print("Use guided mode (option 2) or load mode (option 4) for now.")
                 
         except KeyboardInterrupt:
-            print("\\n\\nExiting...")
+            print("\n\nExiting...")
             sys.exit(0)
         except Exception as e:
-            print(f"\\nError: {e}")
+            print(f"\nError: {e}")
             sys.exit(1)
 
 def main():

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "1.0",
-    "description": "Comprehensive customer support classification dataset with varying difficulty levels",
+    "description": "Customer support classification dataset",
     "categories": ["technical", "billing", "general"],
     "difficulty_levels": ["easy", "medium", "hard", "expert"],
     "total_examples": 100,
@@ -12,901 +12,181 @@
       "id": "001",
       "input": {"text": "My app crashes when I upload files"},
       "output": "technical",
-      "difficulty": "easy",
-      "domain": "software",
-      "tags": ["error", "upload", "crash"],
-      "complexity_score": 0.2
+      "difficulty": "easy"
     },
     {
       "id": "002",
       "input": {"text": "Login page shows 500 error"},
       "output": "technical",
-      "difficulty": "easy",
-      "domain": "web",
-      "tags": ["error", "login", "http"],
-      "complexity_score": 0.2
+      "difficulty": "easy"
     },
     {
       "id": "003",
-      "input": {"text": "The search function isn't working properly"},
-      "output": "technical",
-      "difficulty": "easy",
-      "domain": "functionality",
-      "tags": ["search", "broken", "function"],
-      "complexity_score": 0.3
+      "input": {"text": "I was charged twice for my subscription"},
+      "output": "billing",
+      "difficulty": "easy"
     },
     {
       "id": "004",
-      "input": {"text": "I'm getting a database connection error"},
-      "output": "technical",
-      "difficulty": "easy",
-      "domain": "database",
-      "tags": ["database", "connection", "error"],
-      "complexity_score": 0.3
+      "input": {"text": "How do I cancel my subscription?"},
+      "output": "billing",
+      "difficulty": "easy"
     },
     {
       "id": "005",
-      "input": {"text": "The mobile app keeps freezing on startup"},
-      "output": "technical",
-      "difficulty": "easy",
-      "domain": "mobile",
-      "tags": ["mobile", "freezing", "startup"],
-      "complexity_score": 0.2
+      "input": {"text": "What are your business hours?"},
+      "output": "general",
+      "difficulty": "easy"
     },
     {
       "id": "006",
-      "input": {"text": "My API calls are returning 404 errors"},
+      "input": {"text": "The API returns 404 errors intermittently"},
       "output": "technical",
-      "difficulty": "easy",
-      "domain": "api",
-      "tags": ["api", "404", "error"],
-      "complexity_score": 0.3
+      "difficulty": "medium"
     },
     {
       "id": "007",
-      "input": {"text": "The website loads very slowly on my browser"},
+      "input": {"text": "Database connection timeout under load"},
       "output": "technical",
-      "difficulty": "easy",
-      "domain": "performance",
-      "tags": ["performance", "slow", "browser"],
-      "complexity_score": 0.3
+      "difficulty": "medium"
     },
     {
       "id": "008",
-      "input": {"text": "I can't download my data export file"},
-      "output": "technical",
-      "difficulty": "easy",
-      "domain": "functionality",
-      "tags": ["download", "export", "file"],
-      "complexity_score": 0.2
+      "input": {"text": "My invoice shows incorrect tax calculation"},
+      "output": "billing",
+      "difficulty": "medium"
     },
     {
       "id": "009",
-      "input": {"text": "When does my subscription renew?"},
+      "input": {"text": "Payment failed but card was charged"},
       "output": "billing",
-      "difficulty": "easy",
-      "domain": "subscription",
-      "tags": ["subscription", "renewal", "date"],
-      "complexity_score": 0.1
+      "difficulty": "medium"
     },
     {
       "id": "010",
-      "input": {"text": "How do I upgrade my plan?"},
-      "output": "billing",
-      "difficulty": "easy",
-      "domain": "subscription",
-      "tags": ["upgrade", "plan", "subscription"],
-      "complexity_score": 0.1
+      "input": {"text": "How do I migrate from the old version?"},
+      "output": "general",
+      "difficulty": "medium"
     },
     {
       "id": "011",
-      "input": {"text": "I was charged twice this month"},
-      "output": "billing",
-      "difficulty": "easy",
-      "domain": "payment",
-      "tags": ["charge", "duplicate", "payment"],
-      "complexity_score": 0.2
+      "input": {"text": "Memory leak in production environment"},
+      "output": "technical",
+      "difficulty": "hard"
     },
     {
       "id": "012",
-      "input": {"text": "Can I get a refund for last month?"},
-      "output": "billing",
-      "difficulty": "easy",
-      "domain": "refund",
-      "tags": ["refund", "payment", "month"],
-      "complexity_score": 0.2
+      "input": {"text": "Kubernetes pods failing health checks"},
+      "output": "technical",
+      "difficulty": "hard"
     },
     {
       "id": "013",
-      "input": {"text": "My credit card was declined"},
+      "input": {"text": "Need enterprise licensing options"},
       "output": "billing",
-      "difficulty": "easy",
-      "domain": "payment",
-      "tags": ["credit card", "declined", "payment"],
-      "complexity_score": 0.2
+      "difficulty": "hard"
     },
     {
       "id": "014",
-      "input": {"text": "I need to update my payment method"},
+      "input": {"text": "Custom billing integration requirements"},
       "output": "billing",
-      "difficulty": "easy",
-      "domain": "payment",
-      "tags": ["payment method", "update", "billing"],
-      "complexity_score": 0.1
+      "difficulty": "hard"
     },
     {
       "id": "015",
-      "input": {"text": "What's included in the premium plan?"},
-      "output": "billing",
-      "difficulty": "easy",
-      "domain": "subscription",
-      "tags": ["premium", "plan", "features"],
-      "complexity_score": 0.1
+      "input": {"text": "GDPR compliance documentation needed"},
+      "output": "general",
+      "difficulty": "hard"
     },
     {
       "id": "016",
-      "input": {"text": "I want to cancel my subscription"},
-      "output": "billing",
-      "difficulty": "easy",
-      "domain": "subscription",
-      "tags": ["cancel", "subscription", "billing"],
-      "complexity_score": 0.1
+      "input": {"text": "Race condition in distributed cache layer"},
+      "output": "technical",
+      "difficulty": "expert"
     },
     {
       "id": "017",
-      "input": {"text": "What are your business hours?"},
-      "output": "general",
-      "difficulty": "easy",
-      "domain": "information",
-      "tags": ["hours", "business", "information"],
-      "complexity_score": 0.1
+      "input": {"text": "Performance degradation with sharded database"},
+      "output": "technical",
+      "difficulty": "expert"
     },
     {
       "id": "018",
-      "input": {"text": "How do I contact customer support?"},
-      "output": "general",
-      "difficulty": "easy",
-      "domain": "support",
-      "tags": ["contact", "support", "help"],
-      "complexity_score": 0.1
+      "input": {"text": "Multi-currency reconciliation discrepancies"},
+      "output": "billing",
+      "difficulty": "expert"
     },
     {
       "id": "019",
-      "input": {"text": "Do you have a mobile app?"},
-      "output": "general",
-      "difficulty": "easy",
-      "domain": "information",
-      "tags": ["mobile", "app", "availability"],
-      "complexity_score": 0.1
+      "input": {"text": "Volume discount contract negotiations"},
+      "output": "billing",
+      "difficulty": "expert"
     },
     {
       "id": "020",
-      "input": {"text": "What countries do you operate in?"},
+      "input": {"text": "ISO 27001 certification requirements"},
       "output": "general",
-      "difficulty": "easy",
-      "domain": "information",
-      "tags": ["countries", "operation", "availability"],
-      "complexity_score": 0.1
+      "difficulty": "expert"
     },
     {
       "id": "021",
-      "input": {"text": "Can I integrate with third-party tools?"},
-      "output": "general",
-      "difficulty": "easy",
-      "domain": "integration",
-      "tags": ["integration", "third-party", "tools"],
-      "complexity_score": 0.2
+      "input": {"text": "App won't start after update"},
+      "output": "technical",
+      "difficulty": "easy"
     },
     {
       "id": "022",
-      "input": {"text": "Is there a free trial available?"},
-      "output": "general",
-      "difficulty": "easy",
-      "domain": "trial",
-      "tags": ["free trial", "availability", "demo"],
-      "complexity_score": 0.1
+      "input": {"text": "Refund hasn't been processed yet"},
+      "output": "billing",
+      "difficulty": "easy"
     },
     {
       "id": "023",
-      "input": {"text": "How secure is my data with your platform?"},
+      "input": {"text": "Where can I find the documentation?"},
       "output": "general",
-      "difficulty": "easy",
-      "domain": "security",
-      "tags": ["security", "data", "privacy"],
-      "complexity_score": 0.2
+      "difficulty": "easy"
     },
     {
       "id": "024",
-      "input": {"text": "Do you offer training or tutorials?"},
-      "output": "general",
-      "difficulty": "easy",
-      "domain": "training",
-      "tags": ["training", "tutorials", "education"],
-      "complexity_score": 0.1
+      "input": {"text": "SSL certificate expired on subdomain"},
+      "output": "technical",
+      "difficulty": "medium"
     },
     {
       "id": "025",
-      "input": {"text": "What's your privacy policy?"},
-      "output": "general",
-      "difficulty": "easy",
-      "domain": "policy",
-      "tags": ["privacy", "policy", "legal"],
-      "complexity_score": 0.1
+      "input": {"text": "Promotional code not applying correctly"},
+      "output": "billing",
+      "difficulty": "medium"
     },
     {
       "id": "026",
-      "input": {"text": "My app sometimes crashes when I try to upload large files during peak hours"},
-      "output": "technical",
-      "difficulty": "medium",
-      "domain": "software",
-      "tags": ["intermittent", "upload", "performance", "timing"],
-      "complexity_score": 0.5
+      "input": {"text": "Need help with data migration"},
+      "output": "general",
+      "difficulty": "medium"
     },
     {
       "id": "027",
-      "input": {"text": "I'm experiencing slow response times but only on certain pages"},
+      "input": {"text": "Microservice communication failures"},
       "output": "technical",
-      "difficulty": "medium",
-      "domain": "performance",
-      "tags": ["selective", "performance", "pages", "inconsistent"],
-      "complexity_score": 0.5
+      "difficulty": "hard"
     },
     {
       "id": "028",
-      "input": {"text": "The synchronization between mobile and web versions seems inconsistent"},
-      "output": "technical",
-      "difficulty": "medium",
-      "domain": "sync",
-      "tags": ["synchronization", "mobile", "web", "inconsistency"],
-      "complexity_score": 0.6
+      "input": {"text": "Subscription tiers comparison"},
+      "output": "billing",
+      "difficulty": "hard"
     },
     {
       "id": "029",
-      "input": {"text": "My reports generate correctly but the formatting looks wrong in exports"},
-      "output": "technical",
-      "difficulty": "medium",
-      "domain": "reporting",
-      "tags": ["reports", "formatting", "export", "display"],
-      "complexity_score": 0.5
+      "input": {"text": "API rate limiting best practices"},
+      "output": "general",
+      "difficulty": "hard"
     },
     {
       "id": "030",
-      "input": {"text": "I can log in but some features appear disabled even though my plan should include them"},
+      "input": {"text": "Distributed tracing not capturing all spans"},
       "output": "technical",
-      "difficulty": "medium",
-      "domain": "permissions",
-      "tags": ["login", "permissions", "features", "plan"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "031",
-      "input": {"text": "The API works fine for small requests but times out for larger datasets"},
-      "output": "technical",
-      "difficulty": "medium",
-      "domain": "api",
-      "tags": ["api", "timeout", "dataset size", "performance"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "032",
-      "input": {"text": "Search results are inconsistent - sometimes showing relevant items, sometimes not"},
-      "output": "technical",
-      "difficulty": "medium",
-      "domain": "search",
-      "tags": ["search", "inconsistent", "relevance", "intermittent"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "033",
-      "input": {"text": "Email notifications are working but push notifications aren't reaching my mobile device"},
-      "output": "technical",
-      "difficulty": "medium",
-      "domain": "notifications",
-      "tags": ["notifications", "email", "push", "mobile"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "034",
-      "input": {"text": "I was charged for the premium plan but I think I only signed up for basic - can you check?"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "subscription",
-      "tags": ["plan confusion", "charge verification", "subscription"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "035",
-      "input": {"text": "My payment went through but I don't see the upgraded features yet"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "payment",
-      "tags": ["payment", "upgrade", "features", "delay"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "036",
-      "input": {"text": "I want to downgrade my plan but keep some of the premium features"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "subscription",
-      "tags": ["downgrade", "selective features", "plan"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "037",
-      "input": {"text": "The invoice amount doesn't match what I expected based on the pricing page"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "pricing",
-      "tags": ["invoice", "pricing discrepancy", "billing"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "038",
-      "input": {"text": "I need to split the bill between two departments - is that possible?"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "payment",
-      "tags": ["split billing", "departments", "payment"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "039",
-      "input": {"text": "My company was acquired and we need to transfer billing to the new entity"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "account",
-      "tags": ["transfer", "acquisition", "entity change"],
-      "complexity_score": 0.7
-    },
-    {
-      "id": "040",
-      "input": {"text": "I see multiple charges this month and I'm not sure which services they're for"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "charges",
-      "tags": ["multiple charges", "services", "confusion"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "041",
-      "input": {"text": "The auto-renewal happened but we wanted to review our usage first"},
-      "output": "billing",
-      "difficulty": "medium",
-      "domain": "renewal",
-      "tags": ["auto-renewal", "usage review", "timing"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "042",
-      "input": {"text": "We have multiple users but need billing consolidated to one account"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "account management",
-      "tags": ["multiple users", "consolidated billing", "account"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "043",
-      "input": {"text": "What's the best way to migrate our data from the old system to yours?"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "migration",
-      "tags": ["migration", "data transfer", "best practices"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "044",
-      "input": {"text": "Our compliance team needs documentation about your data handling practices"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "compliance",
-      "tags": ["compliance", "documentation", "data handling"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "045",
-      "input": {"text": "We're evaluating your platform alongside competitors - can we get a detailed comparison?"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "sales",
-      "tags": ["evaluation", "comparison", "competitors"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "046",
-      "input": {"text": "I need to set up SSO for our organization but I'm not sure which plan supports it"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "authentication",
-      "tags": ["SSO", "organization", "plan requirements"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "047",
-      "input": {"text": "Our usage patterns are seasonal - do you offer flexible pricing models?"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "pricing",
-      "tags": ["seasonal usage", "flexible pricing", "models"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "048",
-      "input": {"text": "What level of customization is available for enterprise customers?"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "enterprise",
-      "tags": ["customization", "enterprise", "features"],
-      "complexity_score": 0.5
-    },
-    {
-      "id": "049",
-      "input": {"text": "We need to integrate with Salesforce but want to understand the technical requirements first"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "integration",
-      "tags": ["Salesforce", "integration", "technical requirements"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "050",
-      "input": {"text": "Can you help us estimate costs for a team of 50 users with varying usage levels?"},
-      "output": "general",
-      "difficulty": "medium",
-      "domain": "cost estimation",
-      "tags": ["cost estimation", "team size", "usage levels"],
-      "complexity_score": 0.6
-    },
-    {
-      "id": "051",
-      "input": {"text": "My reports show inconsistent data and I'm not sure if it's a sync issue or billing calculation problem"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "multi-issue",
-      "tags": ["reports", "data inconsistency", "sync", "billing", "ambiguous"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "052",
-      "input": {"text": "The API authentication works but I'm getting charged for calls that should be free tier"},
-      "output": "billing",
-      "difficulty": "hard",
-      "domain": "api-billing",
-      "tags": ["API", "authentication", "billing", "free tier", "technical-billing"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "053",
-      "input": {"text": "Users can't access certain features and I'm not sure if it's a permissions bug or plan limitation"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "access-control",
-      "tags": ["permissions", "features", "bug", "plan limits", "ambiguous"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "054",
-      "input": {"text": "Our integration suddenly stopped working after the billing renewal - are these connected?"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "integration-billing",
-      "tags": ["integration", "billing renewal", "connection", "timing"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "055",
-      "input": {"text": "I'm seeing duplicate entries in my data export and also duplicate charges on my bill"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "data-billing",
-      "tags": ["duplicates", "data export", "charges", "correlation"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "056",
-      "input": {"text": "The system performance degrades significantly at month-end when billing processes run"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "performance-billing",
-      "tags": ["performance", "month-end", "billing processes", "timing"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "057",
-      "input": {"text": "New team members can't access the platform and I need to know if it's a setup issue or we've hit user limits"},
-      "output": "general",
-      "difficulty": "hard",
-      "domain": "user-management",
-      "tags": ["team members", "access", "setup", "user limits", "ambiguous"],
-      "complexity_score": 0.7
-    },
-    {
-      "id": "058",
-      "input": {"text": "Our compliance audit flagged data retention policies but I also need to understand the cost impact"},
-      "output": "general",
-      "difficulty": "hard",
-      "domain": "compliance-billing",
-      "tags": ["compliance", "data retention", "cost impact", "audit"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "059",
-      "input": {"text": "The webhook notifications aren't triggering and our automated billing reconciliation is failing"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "webhooks-billing",
-      "tags": ["webhooks", "notifications", "billing reconciliation", "automation"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "060",
-      "input": {"text": "We're migrating from your competitor and need to understand both technical requirements and cost implications"},
-      "output": "general",
-      "difficulty": "hard",
-      "domain": "migration-complex",
-      "tags": ["migration", "competitor", "technical", "cost", "comprehensive"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "061",
-      "input": {"text": "After the latest update, some users report slow performance while others see billing discrepancies - could these be related?"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "update-impact",
-      "tags": ["update", "performance", "billing", "user reports", "correlation"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "062",
-      "input": {"text": "Our enterprise SSO setup is causing authentication loops and we're unsure if it affects our per-user billing"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "sso-billing",
-      "tags": ["SSO", "authentication loops", "per-user billing", "enterprise"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "063",
-      "input": {"text": "Data exports are missing records from certain date ranges that coincide with billing periods"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "data-billing-timing",
-      "tags": ["data export", "missing records", "date ranges", "billing periods"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "064",
-      "input": {"text": "The load balancer configuration seems to affect both system performance and API call billing accuracy"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "infrastructure-billing",
-      "tags": ["load balancer", "performance", "API billing", "accuracy"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "065",
-      "input": {"text": "Regional data compliance requirements conflict with our global billing consolidation needs"},
-      "output": "general",
-      "difficulty": "hard",
-      "domain": "compliance-billing-global",
-      "tags": ["regional compliance", "data", "global billing", "conflict"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "066",
-      "input": {"text": "Custom field validation errors are preventing data submission and causing billing calculation inconsistencies"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "validation-billing",
-      "tags": ["custom fields", "validation", "data submission", "billing calculation"],
-      "complexity_score": 0.8
-    },
-    {
-      "id": "067",
-      "input": {"text": "Third-party integration OAuth tokens expire inconsistently affecting both functionality and usage tracking for billing"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "oauth-integration-billing",
-      "tags": ["OAuth", "token expiry", "integration", "usage tracking", "billing"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "068",
-      "input": {"text": "Database connection pooling changes improved performance but seem to have affected transaction billing accuracy"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "database-performance-billing",
-      "tags": ["database", "connection pooling", "performance", "transaction billing"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "069",
-      "input": {"text": "Multi-tenant data isolation requirements are impacting both security compliance and our resource-based billing model"},
-      "output": "general",
-      "difficulty": "hard",
-      "domain": "multi-tenant-compliance-billing",
-      "tags": ["multi-tenant", "data isolation", "security", "compliance", "resource billing"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "070",
-      "input": {"text": "Scheduled maintenance windows cause data sync issues that propagate into billing period calculations for enterprise accounts"},
-      "output": "technical",
-      "difficulty": "hard",
-      "domain": "maintenance-sync-billing",
-      "tags": ["maintenance", "data sync", "billing periods", "enterprise", "propagation"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "071",
-      "input": {"text": "Cross-region disaster recovery failover mechanisms are triggering duplicate billing events while maintaining data consistency requirements"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "disaster-recovery-billing",
-      "tags": ["disaster recovery", "failover", "duplicate billing", "data consistency", "cross-region"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "072",
-      "input": {"text": "Microservices architecture transition introduced eventual consistency issues affecting real-time billing aggregation for usage-based pricing models"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "microservices-consistency-billing",
-      "tags": ["microservices", "eventual consistency", "real-time billing", "usage-based pricing"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "073",
-      "input": {"text": "GDPR data deletion requests are causing referential integrity issues in billing history while maintaining audit trail compliance requirements"},
-      "output": "general",
-      "difficulty": "expert",
-      "domain": "gdpr-billing-audit",
-      "tags": ["GDPR", "data deletion", "referential integrity", "billing history", "audit trail"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "074",
-      "input": {"text": "Kubernetes auto-scaling behavior with our event-driven billing architecture creates race conditions in usage metering during traffic spikes"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "kubernetes-billing-race-conditions",
-      "tags": ["Kubernetes", "auto-scaling", "event-driven billing", "race conditions", "usage metering"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "075",
-      "input": {"text": "Machine learning model retraining pipelines consume resources inconsistently affecting both prediction accuracy and cost allocation across departments"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "ml-resource-billing",
-      "tags": ["machine learning", "retraining", "resource consumption", "prediction accuracy", "cost allocation"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "076",
-      "input": {"text": "Blockchain-based audit trail implementation for billing transparency is creating performance bottlenecks in high-throughput transaction processing"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "blockchain-billing-performance",
-      "tags": ["blockchain", "audit trail", "billing transparency", "performance bottleneck", "high-throughput"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "077",
-      "input": {"text": "Federated identity management across multiple cloud providers complicates usage attribution for accurate cross-platform billing reconciliation"},
-      "output": "general",
-      "difficulty": "expert",
-      "domain": "federated-identity-billing",
-      "tags": ["federated identity", "cloud providers", "usage attribution", "cross-platform billing"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "078",
-      "input": {"text": "Edge computing deployment strategy requires distributed billing calculations while maintaining ACID properties across geographically dispersed data centers"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "edge-computing-distributed-billing",
-      "tags": ["edge computing", "distributed billing", "ACID properties", "geographically dispersed"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "079",
-      "input": {"text": "Serverless function cold starts affect billing accuracy for time-based pricing while warm-up costs need separate allocation methodology"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "serverless-billing-cold-starts",
-      "tags": ["serverless", "cold starts", "billing accuracy", "time-based pricing", "warm-up costs"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "080",
-      "input": {"text": "Container orchestration with service mesh introduces network overhead that impacts both latency SLAs and network-based billing calculations"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "service-mesh-billing-sla",
-      "tags": ["container orchestration", "service mesh", "network overhead", "latency SLAs", "network billing"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "081",
-      "input": {"text": "Multi-cloud data pipeline orchestration with real-time streaming analytics creates complex billing attribution challenges across provider boundaries"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "multi-cloud-pipeline-billing",
-      "tags": ["multi-cloud", "data pipeline", "streaming analytics", "billing attribution", "provider boundaries"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "082",
-      "input": {"text": "Quantum computing workload scheduling in hybrid environments requires novel billing models that account for quantum decoherence and classical fallback costs"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "quantum-computing-billing",
-      "tags": ["quantum computing", "workload scheduling", "hybrid environments", "quantum decoherence", "classical fallback"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "083",
-      "input": {"text": "AI-driven resource optimization algorithms modify infrastructure allocation dynamically creating temporal billing complexity for predictive cost modeling"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "ai-resource-optimization-billing",
-      "tags": ["AI-driven", "resource optimization", "dynamic allocation", "temporal billing", "predictive cost modeling"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "084",
-      "input": {"text": "Zero-trust security architecture implementation requires granular access control auditing affecting both compliance reporting and activity-based billing granularity"},
-      "output": "general",
-      "difficulty": "expert",
-      "domain": "zero-trust-compliance-billing",
-      "tags": ["zero-trust", "security architecture", "access control", "compliance reporting", "activity-based billing"],
-      "complexity_score": 0.9
-    },
-    {
-      "id": "085",
-      "input": {"text": "Neuromorphic computing workloads with spiking neural networks require specialized billing models that account for temporal spike patterns and energy efficiency metrics"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "neuromorphic-computing-billing",
-      "tags": ["neuromorphic computing", "spiking neural networks", "temporal patterns", "energy efficiency", "specialized billing"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "086",
-      "input": {"text": "Distributed ledger consensus mechanisms for transaction validation create variable computational costs affecting real-time billing accuracy in decentralized applications"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "distributed-ledger-billing",
-      "tags": ["distributed ledger", "consensus mechanisms", "variable costs", "real-time billing", "decentralized applications"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "087",
-      "input": {"text": "Homomorphic encryption processing overhead impacts both data privacy compliance and computational billing metrics for secure multi-party computation workloads"},
-      "output": "general",
-      "difficulty": "expert",
-      "domain": "homomorphic-encryption-billing",
-      "tags": ["homomorphic encryption", "processing overhead", "privacy compliance", "computational billing", "secure multi-party"],
-      "complexity_score": 0.95
-    },
-    {
-      "id": "088",
-      "input": {"text": "Photonic computing integration with traditional silicon architectures creates hybrid billing challenges for wavelength-division multiplexed computational resources"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "photonic-computing-billing",
-      "tags": ["photonic computing", "silicon architectures", "hybrid billing", "wavelength-division", "computational resources"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "089",
-      "input": {"text": "DNA storage systems with enzymatic data retrieval mechanisms require bio-computational billing models accounting for molecular degradation and read/write cycle limitations"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "dna-storage-billing",
-      "tags": ["DNA storage", "enzymatic retrieval", "bio-computational billing", "molecular degradation", "cycle limitations"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "090",
-      "input": {"text": "Topological quantum error correction in fault-tolerant quantum systems creates complex billing scenarios for logical qubit operations with surface code implementations"},
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "topological-quantum-billing",
-      "tags": ["topological quantum", "error correction", "fault-tolerant", "logical qubits", "surface code"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "091",
-      "input": {"text": "Molecular computing with protein folding algorithms requires energy-aware billing models that account for thermodynamic constraints and conformational space exploration",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "molecular-computing-billing",
-      "tags": ["molecular computing", "protein folding", "energy-aware billing", "thermodynamic constraints", "conformational space"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "092",
-      "input": {"text": "Optical neural network implementations with coherent photonic processing create unique billing requirements for phase-sensitive computational operations",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "optical-neural-network-billing",
-      "tags": ["optical neural networks", "coherent photonic", "phase-sensitive", "computational operations"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "093",
-      "input": {"text": "Quantum-classical hybrid algorithms with variational eigensolvers require dynamic billing allocation between quantum circuit depth and classical optimization iterations",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "quantum-classical-hybrid-billing",
-      "tags": ["quantum-classical hybrid", "variational eigensolvers", "dynamic billing", "circuit depth", "optimization iterations"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "094",
-      "input": {"text": "Reservoir computing with memristive devices creates temporal billing challenges for state-dependent computational paths in non-von Neumann architectures",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "reservoir-computing-billing",
-      "tags": ["reservoir computing", "memristive devices", "temporal billing", "state-dependent", "non-von Neumann"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "095",
-      "input": {"text": "Adiabatic quantum optimization with flux qubits requires specialized billing for annealing schedules and coherence time-dependent computational resources",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "adiabatic-quantum-billing",
-      "tags": ["adiabatic quantum", "flux qubits", "annealing schedules", "coherence time", "computational resources"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "096",
-      "input": {"text": "Spintronic computing with magnetic domain walls requires billing models that account for spin transport efficiency and magnetic field energy consumption",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "spintronic-computing-billing",
-      "tags": ["spintronic computing", "magnetic domain walls", "spin transport", "magnetic field energy"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "097",
-      "input": {"text": "Biocomputing with synthetic biology circuits creates billing complexity for cellular computation cycles and organism maintenance overhead in living systems",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "biocomputing-billing",
-      "tags": ["biocomputing", "synthetic biology", "cellular computation", "organism maintenance", "living systems"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "098",
-      "input": {"text": "Metamaterial-based computing with electromagnetic wave manipulation requires billing models for wavefront shaping operations and reconfigurable antenna arrays",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "metamaterial-computing-billing",
-      "tags": ["metamaterial computing", "electromagnetic waves", "wavefront shaping", "reconfigurable antenna"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "099",
-      "input": {"text": "Plasma-based computing with ionized gas state machines creates unique billing challenges for electromagnetic confinement energy and plasma stability maintenance",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "plasma-computing-billing",
-      "tags": ["plasma computing", "ionized gas", "state machines", "electromagnetic confinement", "plasma stability"],
-      "complexity_score": 1.0
-    },
-    {
-      "id": "100",
-      "input": {"text": "Crystalline computing with defect-engineered semiconductors requires billing models that account for lattice manipulation energy and defect density optimization costs",
-      "output": "technical",
-      "difficulty": "expert",
-      "domain": "crystalline-computing-billing",
-      "tags": ["crystalline computing", "defect-engineered", "semiconductors", "lattice manipulation", "defect density"],
-      "complexity_score": 1.0
+      "difficulty": "expert"
     }
   ]
 }

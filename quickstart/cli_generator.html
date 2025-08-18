@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TraiGent CLI Command Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .config-section {
+            border-right: 1px solid #e0e0e0;
+            padding-right: 30px;
+        }
+        
+        .summary-section {
+            padding-left: 20px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .section h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .checkbox-item:hover {
+            background: #e8e8e8;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .metric {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            color: #333;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        .command-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .copy-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        
+        .copy-button:hover {
+            background: #5a67d8;
+        }
+        
+        .copy-button:active {
+            transform: scale(0.98);
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .config-section {
+                border-right: none;
+                padding-right: 0;
+                border-bottom: 1px solid #e0e0e0;
+                padding-bottom: 30px;
+            }
+            
+            .summary-section {
+                padding-left: 0;
+                padding-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 TraiGent CLI Command Generator</h1>
+            <p>Generate copy-paste commands for the TraiGent benchmark CLI</p>
+        </div>
+        
+        <div class="content">
+            <div class="config-section">
+                <div class="section">
+                    <h2>📋 Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label for="experiment_name">Experiment Name</label>
+                        <input type="text" id="experiment_name" value="optimization_test">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="num_examples">Number of Examples</label>
+                        <input type="number" id="num_examples" min="3" max="30" value="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sampling_strategy">Sampling Strategy</label>
+                        <select id="sampling_strategy">
+                            <option value="1">Stratified (balanced)</option>
+                            <option value="2">Random sampling</option>
+                            <option value="3" selected>Sequential (first N)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>🔧 Parameter Space</h3>
+                    
+                    <div class="form-group">
+                        <label>Models to Test</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="model_gpt35" value="gpt-3.5-turbo" checked>
+                                <label for="model_gpt35">GPT-3.5</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="model_gpt4mini" value="gpt-4o-mini" checked>
+                                <label for="model_gpt4mini">GPT-4 Mini</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="model_gpt4o" value="gpt-4o">
+                                <label for="model_gpt4o">GPT-4o</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="model_gpt4" value="gpt-4">
+                                <label for="model_gpt4">GPT-4</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Temperature Values</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="temp_0" value="0.0" checked>
+                                <label for="temp_0">0.0</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="temp_3" value="0.3">
+                                <label for="temp_3">0.3</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="temp_5" value="0.5" checked>
+                                <label for="temp_5">0.5</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="temp_7" value="0.7">
+                                <label for="temp_7">0.7</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="temp_10" value="1.0" checked>
+                                <label for="temp_10">1.0</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="include_max_tokens" onchange="toggleMaxTokens()">
+                            Include Max Tokens Parameter
+                        </label>
+                        <div class="checkbox-group" id="max_tokens_group" style="display: none;">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tokens_50" value="50" checked>
+                                <label for="tokens_50">50</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tokens_100" value="100" checked>
+                                <label for="tokens_100">100</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tokens_200" value="200">
+                                <label for="tokens_200">200</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="include_few_shot" onchange="toggleFewShot()">
+                            Include Few-Shot Learning
+                        </label>
+                        <div class="checkbox-group" id="few_shot_group" style="display: none;">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="few_0" value="0" checked>
+                                <label for="few_0">0</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="few_1" value="1">
+                                <label for="few_1">1</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="few_3" value="3" checked>
+                                <label for="few_3">3</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="few_5" value="5">
+                                <label for="few_5">5</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>⚙️ Execution Settings</h3>
+                    
+                    <div class="form-group">
+                        <label for="execution_mode">Execution Mode</label>
+                        <select id="execution_mode">
+                            <option value="1" selected>Local (no backend)</option>
+                            <option value="2">Standard (hybrid)</option>
+                            <option value="3">Cloud (full cloud)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="mock_mode" checked>
+                            Use Mock Mode (no API costs)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <div class="section">
+                    <h2>📊 Summary</h2>
+                    
+                    <div class="metric">
+                        <div class="metric-label">Total Combinations</div>
+                        <div class="metric-value" id="total_combinations">6</div>
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-label">Models</div>
+                        <div class="metric-value" id="model_count">2</div>
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-label">Parameters</div>
+                        <div class="metric-value" id="param_count">2</div>
+                    </div>
+                    
+                    <div id="cost_alert" class="alert alert-success">
+                        ✅ Mock mode enabled (no costs)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="padding: 0 30px 30px;">
+            <h2 style="margin-bottom: 20px;">🚀 Generated Command</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('echo')">Echo Command</button>
+                <button class="tab" onclick="showTab('heredoc')">Heredoc Command</button>
+                <button class="tab" onclick="showTab('python')">Python Script</button>
+            </div>
+            
+            <div id="echo-tab" class="tab-content active">
+                <div class="command-output" id="echo_command">
+                    # Loading...
+                </div>
+                <button class="copy-button" onclick="copyCommand('echo_command')">📋 Copy Command</button>
+            </div>
+            
+            <div id="heredoc-tab" class="tab-content">
+                <div class="command-output" id="heredoc_command">
+                    # Loading...
+                </div>
+                <button class="copy-button" onclick="copyCommand('heredoc_command')">📋 Copy Command</button>
+            </div>
+            
+            <div id="python-tab" class="tab-content">
+                <div class="command-output" id="python_script">
+                    # Loading...
+                </div>
+                <button class="copy-button" onclick="copyCommand('python_script')">📋 Copy Script</button>
+            </div>
+        </div>
+        
+        <div class="info-box" style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 4px; margin-top: 20px;">
+            <h3 style="margin-top: 0; color: #856404;">⚠️ Important: API Key Authentication</h3>
+            <p>If you encounter API key errors when running the CLI, use the auth-fixed version:</p>
+            <div style="background: white; padding: 10px; border-radius: 4px; font-family: monospace; margin: 10px 0;">
+                python traigent_benchmark_cli_with_auth.py
+            </div>
+            <p>This version ensures the TRAIGENT_API_KEY is properly sent with all backend requests.</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleMaxTokens() {
+            const group = document.getElementById('max_tokens_group');
+            group.style.display = document.getElementById('include_max_tokens').checked ? 'flex' : 'none';
+            generateCommand();
+        }
+        
+        function toggleFewShot() {
+            const group = document.getElementById('few_shot_group');
+            group.style.display = document.getElementById('include_few_shot').checked ? 'flex' : 'none';
+            generateCommand();
+        }
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function getSelectedValues(prefix) {
+            const values = [];
+            document.querySelectorAll(`input[id^="${prefix}"]:checked`).forEach(cb => {
+                values.push(cb.value);
+            });
+            return values;
+        }
+        
+        function updateSummary() {
+            const models = getSelectedValues('model_');
+            const temps = getSelectedValues('temp_');
+            const includeMaxTokens = document.getElementById('include_max_tokens').checked;
+            const tokens = includeMaxTokens ? getSelectedValues('tokens_') : [];
+            const includeFewShot = document.getElementById('include_few_shot').checked;
+            const fewShot = includeFewShot ? getSelectedValues('few_') : [];
+            
+            let total = models.length * temps.length;
+            let paramCount = 2; // model and temperature
+            
+            if (includeMaxTokens && tokens.length > 0) {
+                total *= tokens.length;
+                paramCount++;
+            }
+            if (includeFewShot && fewShot.length > 0) {
+                total *= fewShot.length;
+                paramCount++;
+            }
+            
+            document.getElementById('total_combinations').textContent = total;
+            document.getElementById('model_count').textContent = models.length;
+            document.getElementById('param_count').textContent = paramCount;
+            
+            // Update cost alert
+            const mockMode = document.getElementById('mock_mode').checked;
+            const costAlert = document.getElementById('cost_alert');
+            if (mockMode) {
+                costAlert.className = 'alert alert-success';
+                costAlert.innerHTML = '✅ Mock mode enabled (no costs)';
+            } else {
+                const numExamples = parseInt(document.getElementById('num_examples').value);
+                const estimatedCost = total * numExamples * 0.001;
+                costAlert.className = 'alert alert-warning';
+                costAlert.innerHTML = `⚠️ Estimated cost: $${estimatedCost.toFixed(2)}`;
+            }
+        }
+        
+        function generateCommand() {
+            updateSummary();
+            
+            const experimentName = document.getElementById('experiment_name').value;
+            const numExamples = document.getElementById('num_examples').value;
+            const samplingStrategy = document.getElementById('sampling_strategy').value;
+            const executionMode = document.getElementById('execution_mode').value;
+            const mockMode = document.getElementById('mock_mode').checked;
+            
+            const models = getSelectedValues('model_');
+            const temps = getSelectedValues('temp_');
+            const includeMaxTokens = document.getElementById('include_max_tokens').checked;
+            const tokens = includeMaxTokens ? getSelectedValues('tokens_') : [];
+            const includeFewShot = document.getElementById('include_few_shot').checked;
+            const fewShot = includeFewShot ? getSelectedValues('few_') : [];
+            
+            // Build input sequence
+            const inputs = [];
+            inputs.push('2'); // Guided configuration
+            inputs.push(experimentName);
+            inputs.push(numExamples);
+            inputs.push(samplingStrategy);
+            
+            // Core LLM parameters
+            inputs.push('y'); // Include Core LLM
+            
+            // Model
+            inputs.push('y'); // Include model
+            inputs.push('y'); // Custom values
+            inputs.push(models.join(','));
+            
+            // Temperature
+            inputs.push('y'); // Include temperature
+            inputs.push('y'); // Custom values
+            inputs.push(temps.join(','));
+            
+            // Max tokens
+            if (includeMaxTokens && tokens.length > 0) {
+                inputs.push('y'); // Include max_tokens
+                inputs.push('y'); // Custom values
+                inputs.push(tokens.join(','));
+            } else {
+                inputs.push('n'); // Skip max_tokens
+            }
+            
+            // Top-p
+            inputs.push('n'); // Skip top_p
+            
+            // Few-shot learning
+            if (includeFewShot && fewShot.length > 0) {
+                inputs.push('y'); // Include few-shot
+                inputs.push('y'); // Include few_shot_k
+                inputs.push('y'); // Custom values
+                inputs.push(fewShot.join(','));
+                inputs.push('n'); // Skip few_shot_strategy
+            } else {
+                inputs.push('n'); // Skip few-shot
+            }
+            
+            // Skip prompt engineering and context/retrieval
+            inputs.push('n'); // Skip prompt engineering
+            inputs.push('n'); // Skip context/retrieval
+            
+            // Execution configuration
+            inputs.push(executionMode);
+            inputs.push(mockMode ? 'y' : 'n');
+            inputs.push('n'); // No early stopping
+            
+            // Final confirmations
+            inputs.push('y'); // Proceed
+            inputs.push('y'); // Save config
+            inputs.push('y'); // Run now
+            
+            // Generate echo command
+            const echoCommand = `# Activate virtual environment and run
+source cli_venv/bin/activate
+echo -e "${inputs.join('\\n')}" | python traigent_benchmark_cli.py`;
+            
+            // Generate heredoc command
+            const heredocCommand = `# Activate virtual environment and run
+source cli_venv/bin/activate
+python traigent_benchmark_cli.py << 'EOF'
+${inputs.join('\\n')}
+EOF`;
+            
+            // Generate Python script
+            const pythonScript = `#!/usr/bin/env python3
+# Generated TraiGent CLI configuration script
+
+import subprocess
+import sys
+
+inputs = ${JSON.stringify(inputs, null, 2)}
+
+# Run the CLI with the inputs
+process = subprocess.Popen(
+    [sys.executable, 'traigent_benchmark_cli.py'],
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True
+)
+
+output, _ = process.communicate(input='\\\\n'.join(inputs))
+print(output)`;
+            
+            document.getElementById('echo_command').textContent = echoCommand;
+            document.getElementById('heredoc_command').textContent = heredocCommand;
+            document.getElementById('python_script').textContent = pythonScript;
+        }
+        
+        function copyCommand(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Command copied to clipboard!');
+            }).catch(err => {
+                alert('Please select and copy the command manually');
+            });
+        }
+        
+        // Add event listeners
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('change', generateCommand);
+        });
+        
+        // Generate initial command
+        generateCommand();
+    </script>
+</body>
+</html>

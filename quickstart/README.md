@@ -1,6 +1,6 @@
-# 🚀 QuickStart - Get Started in 5 Minutes
+# 🚀 QuickStart - TraiGent Examples & Benchmark CLI Tool
 
-**START HERE** - Your fastest path to understanding TraiGent optimization.
+**START HERE** - Your fastest path to understanding TraiGent optimization + Advanced CLI tool for experiments.
 
 ## 📋 What You'll Learn
 
@@ -8,6 +8,7 @@ In just 5 minutes, you'll understand:
 - ✅ How TraiGent works (30 seconds)
 - ✅ Basic optimization concepts (2 minutes)  
 - ✅ Real-world application (3 minutes)
+- ✅ **NEW**: Advanced CLI Benchmark Tool for comprehensive experiments
 
 ## 🎯 Three Essential Examples
 
@@ -35,20 +36,56 @@ python real_use_case.py
 **Time:** 3 minutes  
 **Key Learning:** Practical application with real datasets and metrics
 
+## 🎯 Advanced Benchmark CLI Tool
+
+### **traigent_benchmark_cli.py** - Interactive Optimization Experiments
+
+⚠️ **Update**: Fixed empty parameter issue. Use `safe_cli_runner.py` for foolproof configurations.
+```bash
+# Quick setup (one-time)
+python3 -m venv cli_venv
+source cli_venv/bin/activate
+pip install openai pandas pyyaml
+cd ../Traigent && pip install -e . && cd ../quickstart
+
+# Run the CLI tool
+python traigent_benchmark_cli.py
+```
+
+**Features:**
+- 🎮 Interactive configuration wizard
+- 💰 Mock mode (no API costs)
+- 🔧 12+ optimization parameters
+- 📊 30-example test dataset
+- 📈 Multiple optimization algorithms
+
+**Quick Test Input** (copy-paste when prompted):
+```
+2 → test → 5 → 1 → 2 2 1 0 → y → y y n 2 y y n 2 → n n n → 1 y n → y y y
+```
+
 ## 🎉 Next Steps
 
 After completing quickstart:
 
-1. **📚 Learn More**: → `../fundamentals/` - Deeper SDK concepts
-2. **💼 Use Cases**: → `../applications/` - Real-world scenarios  
-3. **🔌 Integrate**: → `../integrations/` - Framework integrations
-4. **🎮 Experiment**: → `../playground/` - Interactive optimization
+1. **🎮 Try CLI Tool**: Advanced experiments with `traigent_benchmark_cli.py`
+2. **📚 Learn More**: → `../Traigent/examples/` - Deeper SDK concepts
+3. **💼 Use Cases**: → Real-world optimization scenarios  
+4. **🔌 Integrate**: → Framework integrations with LangChain, OpenAI
+
+## 📂 Additional Files
+
+- **`demo_cli_usage.py`** - Demonstration of CLI components
+- **`support_classification_dataset.json`** - 30-example test dataset
+- **`load_env.py`** - Environment configuration (auto-creates mock mode)
+- **`benchmark_configs/`** - Saved CLI configurations
 
 ## 🆘 Need Help?
 
-- **Issues?** Check that your environment is set up correctly
-- **Questions?** See `../fundamentals/` for detailed concepts
-- **Want more?** Explore `../applications/` for specific use cases
+- **CLI Setup Issues?** Run: `source cli_venv/bin/activate`
+- **Import Errors?** Install: `pip install openai pandas pyyaml`
+- **Mock Mode?** Check `.env` has: `TRAIGENT_MOCK_MODE=true`
+- **Full Guide?** See: `../TRAIGENT_CLI_GUIDE.md`
 
 ---
-*Total time investment: 5 minutes • Confidence level after: High • Ready for: Real applications*
+*Basic examples: 5 minutes • CLI setup: 2 minutes • Ready for: Advanced optimization experiments*
