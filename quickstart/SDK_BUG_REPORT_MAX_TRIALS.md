@@ -1,5 +1,10 @@
 # TraiGent SDK Bug Report: max_trials Serialization Issue
 
+## Current Status
+**Status**: 🟡 Workaround Applied - Fix Working  
+**Fixed in**: `traigent_benchmark_cli_with_auth.py`  
+**Fix Type**: Runtime JSON payload interception
+
 ## Bug Description
 The TraiGent SDK is sending `None` for `max_trials` in the session creation request to the backend, causing a TypeError when the backend tries to compare the value.
 
@@ -64,11 +69,21 @@ The backend should also be defensive and handle None values:
 max_trials = session_data.get("optimization_config", {}).get("max_trials") or 50
 ```
 
-## Temporary Workaround
+## Applied Workaround
+The `traigent_benchmark_cli_with_auth.py` script includes a comprehensive fix that:
+1. Intercepts all HTTP requests to the backend
+2. Checks the JSON payload for `optimization_config.max_trials`
+3. Sets it to 50 if it's None or missing
+4. Also fixes max_trials at root level and in session_config
+
+This fix is applied at the aiohttp level, ensuring max_trials is NEVER sent as None.
+
+## Temporary Workaround (if not using fixed script)
 Until the SDK is fixed, users should:
 1. Always explicitly pass `max_trials` parameter
 2. Never pass `None` for max_trials
 3. Use the default value of 50 if unsure
+4. Use `traigent_benchmark_cli_with_auth.py` which includes the fix
 
 ## Verification Steps
 1. Create an optimization with no max_trials specified

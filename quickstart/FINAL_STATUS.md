@@ -9,9 +9,9 @@ The TraiGent Benchmark CLI is now fully functional with workarounds for two crit
 python traigent_benchmark_cli_with_auth.py
 ```
 
-This script includes fixes for:
-1. **Authorization Headers** - Automatically adds your TRAIGENT_API_KEY to all requests
-2. **max_trials Validation** - Ensures max_trials is never None (defaults to 50)
+This script includes WORKING fixes for:
+1. **Authorization Headers** - Automatically adds your TRAIGENT_API_KEY to all requests ✅
+2. **max_trials Validation** - Intercepts JSON and ensures max_trials is never None ✅
 
 ### Web Command Generator
 Use `cli_generator.html` to visually configure experiments and generate commands.
@@ -53,7 +53,7 @@ Use `cli_generator.html` to visually configure experiments and generate commands
 - **Location**: `/Traigent/traigent/cloud/backend_client.py` line 1008
 - **Issue**: Sends `null` for max_trials instead of a number
 - **Impact**: Backend crashes with TypeError
-- **Fix Applied**: Default to 50 if not specified
+- **Fix Applied**: Intercept JSON payload and set to 50 if None (CONFIRMED WORKING ✅)
 
 ## 🚀 Quick Start
 

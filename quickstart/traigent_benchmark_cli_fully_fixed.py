@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
 """
-TraiGent Advanced Benchmark CLI Tool with Auth Fix and max_trials Fix
-This wrapper ensures:
-1. The TRAIGENT_API_KEY is sent with all backend requests
-2. max_trials is never None (defaults to 50 or calculated from config space)
+TraiGent Benchmark CLI with COMPLETE fixes for all SDK bugs
+This version ensures max_trials is ALWAYS sent properly
 """
 
 import os
 import sys
 import json
-import asyncio
 
-# Apply auth fix BEFORE importing traigent
+# Set environment first
+os.environ["TRAIGENT_API_KEY"] = "sk_n_8mXqLXt-eIpWeBpcOfoE8gfq44f1TMGYats_rQ-P4"
+os.environ["TRAIGENT_BACKEND_URL"] = "http://localhost:5000"
+
+# Apply comprehensive fixes BEFORE importing traigent
 import aiohttp
 
-# Fix 1: Patch aiohttp to include API key in all TraiGent backend requests
+# Fix 1: Auth headers
 original_session_init = aiohttp.ClientSession.__init__
 
 def patched_session_init(self, *args, **kwargs):
-    """Patch ClientSession to always include TraiGent API key in headers"""
+    """Patch ClientSession to include TraiGent API key"""
     original_session_init(self, *args, **kwargs)
     original_request = self._request
     
     async def request_with_auth(method, url, **kwargs):
-        """Add TraiGent API key to all backend requests and fix max_trials"""
         backend_url = os.environ.get("TRAIGENT_BACKEND_URL", "http://localhost:5000")
         if backend_url in str(url) or "traigent" in str(url).lower():
             api_key = os.environ.get("TRAIGENT_API_KEY")
@@ -33,23 +33,26 @@ def patched_session_init(self, *args, **kwargs):
                 if 'Authorization' not in kwargs['headers']:
                     kwargs['headers']['Authorization'] = f"Bearer {api_key}"
         
-        # Fix max_trials in JSON payload (the REAL fix)
+        # ALSO fix the JSON data to ensure max_trials is never None
         if 'json' in kwargs and kwargs['json']:
             data = kwargs['json']
             
-            # Fix in optimization_config (most important location)
-            if 'optimization_config' in data and isinstance(data['optimization_config'], dict):
+            # Fix max_trials in optimization_config
+            if 'optimization_config' in data:
                 if 'max_trials' not in data['optimization_config'] or data['optimization_config'].get('max_trials') is None:
                     data['optimization_config']['max_trials'] = 50
+                    print(f"🔧 Fixed max_trials in optimization_config: set to 50")
             
-            # Fix at root level  
+            # Fix max_trials at root level
             if 'max_trials' in data and data['max_trials'] is None:
                 data['max_trials'] = 50
+                print(f"🔧 Fixed max_trials at root: set to 50")
             
             # Fix in session_config if present
-            if 'session_config' in data and isinstance(data['session_config'], dict):
+            if 'session_config' in data and data['session_config']:
                 if 'max_trials' in data['session_config'] and data['session_config']['max_trials'] is None:
                     data['session_config']['max_trials'] = 50
+                    print(f"🔧 Fixed max_trials in session_config: set to 50")
         
         return await original_request(method, url, **kwargs)
     
@@ -57,28 +60,22 @@ def patched_session_init(self, *args, **kwargs):
 
 aiohttp.ClientSession.__init__ = patched_session_init
 
-# Fix 2: Ensure max_trials is never None
+print("✅ Applied comprehensive fixes:")
+print("   - Authorization headers will be added")
+print("   - max_trials will ALWAYS be set (never None)")
+print()
+
+# Fix 2: Patch TraiGent modules
 sys.path.insert(0, '/home/nimrodbu/projects/traigent-sandbox/Traigent')
 
 from traigent.cloud import backend_client
 from traigent.cloud import models
 
-# Patch the backend client to ensure max_trials
-original_create_session = backend_client.BackendIntegratedClient._create_traigent_session_via_api
-
-async def patched_create_session(self, session_request):
-    """Ensure max_trials is never None when sending to backend"""
-    if session_request.max_trials is None:
-        session_request.max_trials = 50
-    return await original_create_session(self, session_request)
-
-backend_client.BackendIntegratedClient._create_traigent_session_via_api = patched_create_session
-
-# Patch SessionCreationRequest
+# Ensure SessionCreationRequest always has max_trials
 original_session_init = models.SessionCreationRequest.__init__
 
 def patched_session_init(self, *args, **kwargs):
-    """Ensure max_trials has a default value"""
+    """Ensure max_trials is never None"""
     if 'max_trials' not in kwargs or kwargs.get('max_trials') is None:
         kwargs['max_trials'] = 50
     original_session_init(self, *args, **kwargs)
@@ -96,16 +93,12 @@ if hasattr(models, 'OptimizationRequest'):
     
     models.OptimizationRequest.__init__ = patched_opt_init
 
-# Now run the original CLI with the fixes applied
+# Now run the original CLI
 sys.path.insert(0, '/home/nimrodbu/projects/traigent-sandbox/quickstart')
 from traigent_benchmark_cli import main
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🔧 TraiGent Benchmark CLI with Auth & max_trials Fixes")
+    print("🚀 TraiGent Benchmark CLI - Fully Fixed Version")
     print("=" * 60)
-    print("✅ Authorization headers will be automatically added")
-    print("✅ max_trials will default to 50 if not specified")
-    print("=" * 60)
-    print()
     main()
