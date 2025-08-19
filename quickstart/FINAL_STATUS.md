@@ -6,10 +6,10 @@ The TraiGent Benchmark CLI is now fully functional with workarounds for two crit
 
 ### Main Script to Use
 ```bash
-python traigent_benchmark_cli_final.py
+python traigent_benchmark_cli.py
 ```
 
-This script includes ALL WORKING fixes for:
+The main CLI now includes ALL fixes integrated:
 1. **Authorization Headers** - Automatically adds your TRAIGENT_API_KEY to all requests ✅
 2. **max_trials Validation** - Intercepts JSON and ensures max_trials is never None ✅
 3. **Mock Mode Activation** - Prevents real API calls, uses mock responses ✅
@@ -21,9 +21,7 @@ Use `cli_generator.html` to visually configure experiments and generate commands
 ## 📁 Final File Structure
 
 ### Key Files
-- `traigent_benchmark_cli.py` - Original CLI (has SDK bugs)
-- `traigent_benchmark_cli_with_auth.py` - Auth + max_trials fixes
-- **`traigent_benchmark_cli_final.py`** - COMPLETE SOLUTION (USE THIS!) ✅
+- **`traigent_benchmark_cli.py`** - Main CLI with ALL fixes integrated ✅
 - `cli_generator.html` - Web interface for generating commands
 - `cli_command_generator.py` - Python command generator
 - `HOW_TO_RUN.md` - Usage documentation
@@ -64,9 +62,9 @@ Use `cli_generator.html` to visually configure experiments and generate commands
    firefox cli_generator.html
    ```
 
-2. Run the generated command with the final CLI:
+2. Run the generated command with the main CLI:
    ```bash
-   echo 'model=["gpt-3.5-turbo","gpt-4o-mini"] temperature=[0.3,0.7]' | python traigent_benchmark_cli_final.py
+   echo 'model=["gpt-3.5-turbo","gpt-4o-mini"] temperature=[0.3,0.7]' | python traigent_benchmark_cli.py
    ```
 
 ## 🔧 Environment Variables
@@ -79,14 +77,14 @@ Required settings (already in `.env`):
 
 ## 📝 Notes
 
-- Always use `traigent_benchmark_cli_final.py` for complete functionality ✅
-- All fixes are applied automatically when you run the script ✅
+- Single maintained script: `traigent_benchmark_cli.py` ✅
+- All fixes are applied automatically at startup ✅
 - Mock mode prevents any real API calls (no costs) ✅
 - All known issues are now resolved ✅
 
 ## 🔬 Test Results
 
-The final script successfully:
+The main CLI successfully:
 - ✅ Creates TraiGent sessions without auth errors
 - ✅ Sends max_trials properly (no more None values)
 - ✅ Uses mock responses (no real API calls)

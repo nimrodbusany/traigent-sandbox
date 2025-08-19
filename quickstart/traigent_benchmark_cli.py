@@ -8,6 +8,12 @@ A configurable benchmarking tool for TraiGent optimization with support for:
 - Mock mode for cost-free testing
 - Few-shot learning and prompt engineering
 - Comprehensive results analysis and export
+
+INCLUDES FIXES FOR:
+- Authorization headers for backend communication
+- max_trials validation to prevent None values
+- Mock mode activation to avoid real API calls
+- SessionCreationRequest connector error
 """
 
 import json
@@ -21,6 +27,52 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import uuid
+import asyncio
+
+# Apply critical fixes BEFORE importing anything else
+import aiohttp
+
+# Fix 1: Patch aiohttp to include API key and fix max_trials
+original_session_init = aiohttp.ClientSession.__init__
+
+def patched_session_init(self, *args, **kwargs):
+    """Patch ClientSession to include TraiGent API key and fix max_trials"""
+    original_session_init(self, *args, **kwargs)
+    original_request = self._request
+    
+    async def request_with_auth(method, url, **kwargs):
+        backend_url = os.environ.get("TRAIGENT_BACKEND_URL", "http://localhost:5000")
+        if backend_url in str(url) or "traigent" in str(url).lower():
+            api_key = os.environ.get("TRAIGENT_API_KEY")
+            if api_key:
+                if 'headers' not in kwargs:
+                    kwargs['headers'] = {}
+                if 'Authorization' not in kwargs['headers']:
+                    kwargs['headers']['Authorization'] = f"Bearer {api_key}"
+        
+        # Fix max_trials in JSON payload
+        if 'json' in kwargs and kwargs['json']:
+            data = kwargs['json']
+            
+            # Fix in optimization_config (most important location)
+            if 'optimization_config' in data and isinstance(data['optimization_config'], dict):
+                if 'max_trials' not in data['optimization_config'] or data['optimization_config'].get('max_trials') is None:
+                    data['optimization_config']['max_trials'] = 50
+            
+            # Fix at root level  
+            if 'max_trials' in data and data['max_trials'] is None:
+                data['max_trials'] = 50
+            
+            # Fix in session_config if present
+            if 'session_config' in data and isinstance(data['session_config'], dict):
+                if 'max_trials' in data['session_config'] and data['session_config']['max_trials'] is None:
+                    data['session_config']['max_trials'] = 50
+        
+        return await original_request(method, url, **kwargs)
+    
+    self._request = request_with_auth
+
+aiohttp.ClientSession.__init__ = patched_session_init
 
 import openai
 
@@ -43,6 +95,31 @@ except ImportError:
         pass
 
 import traigent
+
+# Fix 2: Patch SessionCreationRequest to handle connector issue
+try:
+    from traigent.cloud import models
+    
+    original_session_creation_init = models.SessionCreationRequest.__init__
+    
+    def patched_session_creation_init(self, *args, **kwargs):
+        """Fix SessionCreationRequest to handle unexpected keyword arguments"""
+        # Remove any unexpected kwargs that cause errors
+        unexpected_keys = ['connector']
+        for key in unexpected_keys:
+            if key in kwargs:
+                kwargs.pop(key)
+        
+        # Ensure max_trials is never None
+        if 'max_trials' not in kwargs or kwargs.get('max_trials') is None:
+            kwargs['max_trials'] = 50
+        
+        original_session_creation_init(self, *args, **kwargs)
+    
+    models.SessionCreationRequest.__init__ = patched_session_creation_init
+except ImportError:
+    # If traigent.cloud.models is not available, continue without this fix
+    pass
 
 # Load environment variables first
 load_demo_env()

@@ -1,14 +1,16 @@
 # How to Run TraiGent Benchmark CLI
 
-## The Fixed Script to Use
+## Main Script
 
 ```bash
-python traigent_benchmark_cli_with_auth.py
+python traigent_benchmark_cli.py
 ```
 
-This script includes fixes for BOTH SDK bugs:
+The main CLI now includes ALL fixes integrated:
 - ✅ **Auth Fix**: Automatically adds Authorization headers with your TRAIGENT_API_KEY
 - ✅ **max_trials Fix**: Ensures max_trials is never None (defaults to 50)
+- ✅ **Mock Mode**: Prevents real API calls
+- ✅ **Connector Fix**: Handles SessionCreationRequest errors
 
 ## Usage Methods
 
@@ -23,23 +25,16 @@ This script includes fixes for BOTH SDK bugs:
 
 2. **Select your parameters** using the checkboxes
 
-3. **Copy the generated command** and modify it to use the fixed script:
-   
-   If the generator gives you:
+3. **Copy and run the generated command** directly:
    ```bash
    echo 'model=["gpt-3.5-turbo","gpt-4o-mini"] temperature=[0.3,0.7]' | python traigent_benchmark_cli.py
-   ```
-   
-   Change it to:
-   ```bash
-   echo 'model=["gpt-3.5-turbo","gpt-4o-mini"] temperature=[0.3,0.7]' | python traigent_benchmark_cli_with_auth.py
    ```
 
 ### Method 2: Interactive Mode
 
 Run the CLI interactively and follow the guided wizard:
 ```bash
-python traigent_benchmark_cli_with_auth.py
+python traigent_benchmark_cli.py
 ```
 
 Then choose option 2 (Guided Configuration) and follow the prompts.
@@ -48,17 +43,17 @@ Then choose option 2 (Guided Configuration) and follow the prompts.
 
 #### Quick 2-parameter test (4 combinations):
 ```bash
-echo 'model=["gpt-3.5-turbo","gpt-4o-mini"] temperature=[0.3,0.7]' | python traigent_benchmark_cli_with_auth.py
+echo 'model=["gpt-3.5-turbo","gpt-4o-mini"] temperature=[0.3,0.7]' | python traigent_benchmark_cli.py
 ```
 
 #### Medium 3-parameter test (18 combinations):
 ```bash
-echo 'model=["gpt-3.5-turbo","gpt-4o-mini","gpt-4o"] temperature=[0.3,0.7,0.9] max_tokens=[50,100]' | python traigent_benchmark_cli_with_auth.py
+echo 'model=["gpt-3.5-turbo","gpt-4o-mini","gpt-4o"] temperature=[0.3,0.7,0.9] max_tokens=[50,100]' | python traigent_benchmark_cli.py
 ```
 
 #### Large 4-parameter test (36 combinations):
 ```bash
-echo 'model=["gpt-3.5-turbo","gpt-4o-mini","gpt-4o"] temperature=[0.3,0.7] max_tokens=[50,100] top_p=[0.5,0.9,1.0]' | python traigent_benchmark_cli_with_auth.py
+echo 'model=["gpt-3.5-turbo","gpt-4o-mini","gpt-4o"] temperature=[0.3,0.7] max_tokens=[50,100] top_p=[0.5,0.9,1.0]' | python traigent_benchmark_cli.py
 ```
 
 ## What the Fixes Do
@@ -83,7 +78,7 @@ TRAIGENT_MOCK_MODE=true
 
 ## Notes
 
-- **Always use `traigent_benchmark_cli_with_auth.py`** instead of the original `traigent_benchmark_cli.py`
-- The fixes are applied automatically when you run the script
+- **All fixes are now integrated into `traigent_benchmark_cli.py`**
+- The fixes are applied automatically at startup
 - You don't need to specify max_trials - it will default to 50 if not provided
 - Mock mode is enabled by default to avoid API costs during testing
