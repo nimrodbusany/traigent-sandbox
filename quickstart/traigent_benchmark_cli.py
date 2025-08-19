@@ -79,20 +79,23 @@ import openai
 from load_env import load_demo_env
 from shared_utils.mock_llm import setup_mock_mode
 
-# Try to import mock_openai_patch, but don't fail if it's missing
+# Try to import intelligent mock first, then fallback to basic mock
 try:
-    from mock_openai_patch import setup_mock_environment, patch_openai
+    from intelligent_mock_patch import setup_mock_environment, patch_openai
 except ImportError:
-    # Fallback implementation if mock_openai_patch is not available
-    def setup_mock_environment():
-        """Fallback mock environment setup"""
-        os.environ["TRAIGENT_MOCK_MODE"] = "true"
-        os.environ["SKIP_API_KEY_CHECK"] = "true"
-        
-    def patch_openai():
-        """Fallback OpenAI patch using TraiGent's built-in mocking"""
-        # TraiGent has its own mocking system, we'll rely on that
-        pass
+    try:
+        from mock_openai_patch import setup_mock_environment, patch_openai
+    except ImportError:
+        # Fallback implementation if no mock patches are available
+        def setup_mock_environment():
+            """Fallback mock environment setup"""
+            os.environ["TRAIGENT_MOCK_MODE"] = "true"
+            os.environ["SKIP_API_KEY_CHECK"] = "true"
+            
+        def patch_openai():
+            """Fallback OpenAI patch using TraiGent's built-in mocking"""
+            # TraiGent has its own mocking system, we'll rely on that
+            pass
 
 import traigent
 
@@ -206,8 +209,14 @@ class DatasetLoader:
         """Create temporary dataset file for TraiGent"""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
             for example in examples:
+                # Handle both formats: {"input": {"text": "..."}} and {"input": "..."}
+                if isinstance(example["input"], dict) and "text" in example["input"]:
+                    input_text = example["input"]["text"]
+                else:
+                    input_text = example["input"]
+                    
                 json.dump({
-                    "input": example["input"], 
+                    "input": {"text": input_text}, 
                     "output": example["output"]
                 }, f)
                 f.write("\n")
@@ -908,10 +917,24 @@ class TraiGentBenchmarkCLI:
         if config.execution['mock_mode']:
             setup_mock_environment()  # Use the more robust mock setup
             patch_openai()  # Ensure OpenAI is patched
+            # Force local mode for mock to avoid backend calls
+            os.environ["TRAIGENT_EXECUTION_MODE"] = "local"
+        else:
+            # Use cloud mode for real execution to ensure backend receives data
+            os.environ["TRAIGENT_EXECUTION_MODE"] = "cloud"
         
         # Initialize prompt builder and example selector
         prompt_builder = PromptBuilder()
         example_selector = ExampleSelector(self.dataset_loader.dataset['examples'])
+        
+        # Determine execution mode based on config
+        if config.execution.get('mock_mode', True):
+            execution_mode = "local"
+        else:
+            # Use cloud for backend integration
+            execution_mode = "cloud"
+            
+        print(f"\n📌 Using execution mode: {execution_mode}")
         
         # Create the optimized function using TraiGent's parameter injection
         @traigent.optimize(
@@ -919,7 +942,8 @@ class TraiGentBenchmarkCLI:
             objectives=["accuracy"],
             configuration_space=config_space,
             max_trials=config.execution.get('max_trials', 10),
-            algorithm=config.execution.get('algorithm', 'grid')
+            algorithm=config.execution.get('algorithm', 'grid'),
+            execution_mode=execution_mode
         )
         def classify_with_dynamic_params(
             text: str,
@@ -1018,7 +1042,9 @@ class TraiGentBenchmarkCLI:
                             results = await optimized_function.optimize()
                             return results
                         
-                        # Execute the optimization
+                        # Execute the optimization with progress tracking
+                        print("\n📊 Trial Progress:")
+                        print("-" * 50)
                         results = asyncio.run(run_optimization())
                         
                         # Display results

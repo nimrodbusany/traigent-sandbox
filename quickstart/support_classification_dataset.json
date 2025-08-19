@@ -1,11 +1,9 @@
 {
   "metadata": {
     "version": "1.0",
-    "description": "Customer support classification dataset",
-    "categories": ["technical", "billing", "general"],
-    "difficulty_levels": ["easy", "medium", "hard", "expert"],
-    "total_examples": 100,
-    "created_date": "2025-08-17"
+    "description": "Customer support ticket classification dataset",
+    "categories": ["technical", "billing", "general", "feedback"],
+    "total_examples": 25
   },
   "examples": [
     {
@@ -16,175 +14,145 @@
     },
     {
       "id": "002",
-      "input": {"text": "Login page shows 500 error"},
-      "output": "technical",
-      "difficulty": "easy"
-    },
-    {
-      "id": "003",
       "input": {"text": "I was charged twice for my subscription"},
       "output": "billing",
       "difficulty": "easy"
     },
     {
-      "id": "004",
-      "input": {"text": "How do I cancel my subscription?"},
-      "output": "billing",
-      "difficulty": "easy"
-    },
-    {
-      "id": "005",
+      "id": "003",
       "input": {"text": "What are your business hours?"},
       "output": "general",
       "difficulty": "easy"
     },
     {
-      "id": "006",
-      "input": {"text": "The API returns 404 errors intermittently"},
+      "id": "004",
+      "input": {"text": "Login page shows 500 error"},
       "output": "technical",
-      "difficulty": "medium"
+      "difficulty": "easy"
+    },
+    {
+      "id": "005",
+      "input": {"text": "How do I upgrade my plan?"},
+      "output": "billing",
+      "difficulty": "easy"
+    },
+    {
+      "id": "006",
+      "input": {"text": "Do you have a mobile app?"},
+      "output": "general",
+      "difficulty": "easy"
     },
     {
       "id": "007",
-      "input": {"text": "Database connection timeout under load"},
+      "input": {"text": "The search function isn't working properly"},
       "output": "technical",
-      "difficulty": "medium"
+      "difficulty": "easy"
     },
     {
       "id": "008",
-      "input": {"text": "My invoice shows incorrect tax calculation"},
+      "input": {"text": "When does my subscription renew?"},
       "output": "billing",
-      "difficulty": "medium"
+      "difficulty": "easy"
     },
     {
       "id": "009",
-      "input": {"text": "Payment failed but card was charged"},
-      "output": "billing",
+      "input": {"text": "API authentication failing with valid credentials"},
+      "output": "technical",
       "difficulty": "medium"
     },
     {
       "id": "010",
-      "input": {"text": "How do I migrate from the old version?"},
-      "output": "general",
+      "input": {"text": "My payment went through but I don't see the upgraded features yet"},
+      "output": "billing",
       "difficulty": "medium"
     },
     {
       "id": "011",
-      "input": {"text": "Memory leak in production environment"},
-      "output": "technical",
-      "difficulty": "hard"
+      "input": {"text": "What's the best way to migrate our data from the old system?"},
+      "output": "general",
+      "difficulty": "medium"
     },
     {
       "id": "012",
-      "input": {"text": "Kubernetes pods failing health checks"},
+      "input": {"text": "Database connection timeout after recent update"},
       "output": "technical",
-      "difficulty": "hard"
+      "difficulty": "medium"
     },
     {
       "id": "013",
-      "input": {"text": "Need enterprise licensing options"},
+      "input": {"text": "Prorated billing not calculated correctly after plan change"},
       "output": "billing",
-      "difficulty": "hard"
+      "difficulty": "medium"
     },
     {
       "id": "014",
-      "input": {"text": "Custom billing integration requirements"},
-      "output": "billing",
-      "difficulty": "hard"
+      "input": {"text": "Can you provide documentation for GDPR compliance?"},
+      "output": "general",
+      "difficulty": "medium"
     },
     {
       "id": "015",
-      "input": {"text": "GDPR compliance documentation needed"},
-      "output": "general",
+      "input": {"text": "SSL certificate validation failing in production environment"},
+      "output": "technical",
       "difficulty": "hard"
     },
     {
       "id": "016",
-      "input": {"text": "Race condition in distributed cache layer"},
-      "output": "technical",
-      "difficulty": "expert"
+      "input": {"text": "Enterprise pricing tier not applying volume discount"},
+      "output": "billing",
+      "difficulty": "hard"
     },
     {
       "id": "017",
-      "input": {"text": "Performance degradation with sharded database"},
-      "output": "technical",
-      "difficulty": "expert"
+      "input": {"text": "Need SOC2 Type II audit report for vendor assessment"},
+      "output": "general",
+      "difficulty": "hard"
     },
     {
       "id": "018",
-      "input": {"text": "Multi-currency reconciliation discrepancies"},
-      "output": "billing",
-      "difficulty": "expert"
+      "input": {"text": "The new UI is much better than before, great work!"},
+      "output": "feedback",
+      "difficulty": "easy"
     },
     {
       "id": "019",
-      "input": {"text": "Volume discount contract negotiations"},
-      "output": "billing",
-      "difficulty": "expert"
+      "input": {"text": "I'd like to suggest a new feature for the mobile app"},
+      "output": "feedback",
+      "difficulty": "medium"
     },
     {
       "id": "020",
-      "input": {"text": "ISO 27001 certification requirements"},
-      "output": "general",
+      "input": {"text": "Kubernetes deployment failing with OOMKilled status"},
+      "output": "technical",
       "difficulty": "expert"
     },
     {
       "id": "021",
-      "input": {"text": "App won't start after update"},
-      "output": "technical",
-      "difficulty": "easy"
+      "input": {"text": "VAT reverse charge mechanism not applied for EU B2B transactions"},
+      "output": "billing",
+      "difficulty": "expert"
     },
     {
       "id": "022",
-      "input": {"text": "Refund hasn't been processed yet"},
-      "output": "billing",
-      "difficulty": "easy"
+      "input": {"text": "GraphQL subscription websocket disconnecting after JWT refresh"},
+      "output": "technical",
+      "difficulty": "expert"
     },
     {
       "id": "023",
-      "input": {"text": "Where can I find the documentation?"},
-      "output": "general",
-      "difficulty": "easy"
+      "input": {"text": "ACH payment reconciliation showing discrepancies in batch processing"},
+      "output": "billing",
+      "difficulty": "expert"
     },
     {
       "id": "024",
-      "input": {"text": "SSL certificate expired on subdomain"},
-      "output": "technical",
-      "difficulty": "medium"
+      "input": {"text": "Your platform has revolutionized our workflow efficiency"},
+      "output": "feedback",
+      "difficulty": "expert"
     },
     {
       "id": "025",
-      "input": {"text": "Promotional code not applying correctly"},
-      "output": "billing",
-      "difficulty": "medium"
-    },
-    {
-      "id": "026",
-      "input": {"text": "Need help with data migration"},
-      "output": "general",
-      "difficulty": "medium"
-    },
-    {
-      "id": "027",
-      "input": {"text": "Microservice communication failures"},
-      "output": "technical",
-      "difficulty": "hard"
-    },
-    {
-      "id": "028",
-      "input": {"text": "Subscription tiers comparison"},
-      "output": "billing",
-      "difficulty": "hard"
-    },
-    {
-      "id": "029",
-      "input": {"text": "API rate limiting best practices"},
-      "output": "general",
-      "difficulty": "hard"
-    },
-    {
-      "id": "030",
-      "input": {"text": "Distributed tracing not capturing all spans"},
+      "input": {"text": "Memory leak in React component after unmounting"},
       "output": "technical",
       "difficulty": "expert"
     }
