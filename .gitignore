@@ -42,13 +42,18 @@ coverage.xml
 cover/
 
 # Virtual environments
-.env
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+cli_venv/
+test_venv/
+
+# Environment files (keep template but not actual env files)
+.env
+!.env.example
 
 # IDEs
 .vscode/
@@ -68,7 +73,6 @@ Thumbs.db
 
 # Project specific
 *.log
-cache/
 temp/
 tmp/
 *.tmp
@@ -78,6 +82,17 @@ tmp/
 sdk_validation_test/
 Traigent/
 
-# Temporary files
-benchmark_configs/
+# Temporary files and test artifacts
+temp.json
+test_*.py
+test_scripts/
+old_scripts/
+
+# TraiGent runtime files
 *.jsonl
+!support_classification_dataset.json
+/quickstart/cache/
+
+# Keep important config files
+!benchmark_configs/
+!*.yaml
