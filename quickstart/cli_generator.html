@@ -23,7 +23,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
         
@@ -40,13 +40,13 @@
         }
         
         .header p {
-            opacity: 0.9;
             font-size: 1.1em;
+            opacity: 0.9;
         }
         
         .content {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 30px;
             padding: 30px;
         }
@@ -57,7 +57,7 @@
         }
         
         .summary-section {
-            padding-left: 20px;
+            padding-left: 30px;
         }
         
         .section {
@@ -68,13 +68,14 @@
             color: #333;
             margin-bottom: 20px;
             font-size: 1.5em;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .section h3 {
             color: #555;
-            margin-bottom: 15px;
+            margin: 20px 0 15px;
             font-size: 1.2em;
         }
         
@@ -86,14 +87,14 @@
             display: block;
             margin-bottom: 8px;
             color: #555;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .form-group input[type="text"],
         .form-group input[type="number"],
         .form-group select {
             width: 100%;
-            padding: 10px;
+            padding: 10px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1em;
@@ -107,79 +108,94 @@
         }
         
         .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
             margin-top: 10px;
         }
         
         .checkbox-item {
             display: flex;
             align-items: center;
-            background: #f5f5f5;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .checkbox-item:hover {
-            background: #e8e8e8;
+            gap: 8px;
         }
         
         .checkbox-item input[type="checkbox"] {
-            margin-right: 8px;
+            width: 18px;
+            height: 18px;
             cursor: pointer;
         }
         
-        .metric {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .metric-label {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-        
-        .metric-value {
-            color: #333;
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
+        .checkbox-item label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
         }
         
         .command-output {
-            background: #1e1e1e;
-            color: #d4d4d4;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             padding: 20px;
-            border-radius: 10px;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
-            line-height: 1.5;
-            overflow-x: auto;
+            line-height: 1.6;
+            word-break: break-all;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .summary-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
             margin-bottom: 20px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .summary-label {
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .tab-container {
+            margin-top: 20px;
         }
         
         .tabs {
@@ -190,7 +206,7 @@
         
         .tab {
             padding: 10px 20px;
-            background: #f0f0f0;
+            background: #f5f5f5;
             border: none;
             border-radius: 8px 8px 0 0;
             cursor: pointer;
@@ -220,6 +236,7 @@
             cursor: pointer;
             font-size: 1em;
             transition: background 0.3s;
+            margin-top: 15px;
         }
         
         .copy-button:hover {
@@ -228,6 +245,13 @@
         
         .copy-button:active {
             transform: scale(0.98);
+        }
+        
+        .help-text {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+            font-style: italic;
         }
         
         @media (max-width: 768px) {
@@ -246,6 +270,10 @@
                 padding-left: 0;
                 padding-top: 30px;
             }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -253,7 +281,7 @@
     <div class="container">
         <div class="header">
             <h1>🎯 TraiGent CLI Command Generator</h1>
-            <p>Generate copy-paste commands for the TraiGent benchmark CLI</p>
+            <p>Generate direct command-line calls for the TraiGent optimization tool</p>
         </div>
         
         <div class="content">
@@ -262,22 +290,30 @@
                     <h2>📋 Configuration</h2>
                     
                     <div class="form-group">
-                        <label for="experiment_name">Experiment Name</label>
-                        <input type="text" id="experiment_name" value="optimization_test">
+                        <label for="agent_selection">Agent</label>
+                        <select id="agent_selection" onchange="updateAgentInfo()">
+                            <option value="support_classifier" selected>Support Classifier</option>
+                            <!-- Add more agents as they become available -->
+                        </select>
+                        <div class="help-text" id="agent_description">
+                            Customer support ticket classification
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="num_examples">Number of Examples</label>
-                        <input type="number" id="num_examples" min="3" max="30" value="10">
+                        <input type="number" id="num_examples" min="3" max="100" value="10">
+                        <div class="help-text">Number of examples to use from the dataset</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="sampling_strategy">Sampling Strategy</label>
                         <select id="sampling_strategy">
-                            <option value="1">Stratified (balanced)</option>
-                            <option value="2">Random sampling</option>
-                            <option value="3" selected>Sequential (first N)</option>
+                            <option value="sequential" selected>Sequential (first N)</option>
+                            <option value="stratified">Stratified (balanced)</option>
+                            <option value="random">Random sampling</option>
                         </select>
+                        <div class="help-text">How to select examples from the dataset</div>
                     </div>
                 </div>
                 
@@ -289,11 +325,11 @@
                         <div class="checkbox-group">
                             <div class="checkbox-item">
                                 <input type="checkbox" id="model_gpt35" value="gpt-3.5-turbo" checked>
-                                <label for="model_gpt35">GPT-3.5</label>
+                                <label for="model_gpt35">GPT-3.5-turbo</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="model_gpt4mini" value="gpt-4o-mini" checked>
-                                <label for="model_gpt4mini">GPT-4 Mini</label>
+                                <label for="model_gpt4mini">GPT-4o Mini</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="model_gpt4o" value="gpt-4o">
@@ -334,46 +370,58 @@
                     
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" id="include_max_tokens" onchange="toggleMaxTokens()">
+                            <input type="checkbox" id="include_max_tokens">
                             Include Max Tokens Parameter
                         </label>
-                        <div class="checkbox-group" id="max_tokens_group" style="display: none;">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="tokens_50" value="50" checked>
-                                <label for="tokens_50">50</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="tokens_100" value="100" checked>
-                                <label for="tokens_100">100</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="tokens_200" value="200">
-                                <label for="tokens_200">200</label>
+                        <div id="max_tokens_group" style="display: none; margin-top: 10px;">
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tokens_10" value="10">
+                                    <label for="tokens_10">10</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tokens_20" value="20">
+                                    <label for="tokens_20">20</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tokens_50" value="50" checked>
+                                    <label for="tokens_50">50</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tokens_100" value="100" checked>
+                                    <label for="tokens_100">100</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tokens_200" value="200">
+                                    <label for="tokens_200">200</label>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" id="include_few_shot" onchange="toggleFewShot()">
+                            <input type="checkbox" id="include_few_shot">
                             Include Few-Shot Learning
                         </label>
-                        <div class="checkbox-group" id="few_shot_group" style="display: none;">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="few_0" value="0" checked>
-                                <label for="few_0">0</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="few_1" value="1">
-                                <label for="few_1">1</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="few_3" value="3" checked>
-                                <label for="few_3">3</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="few_5" value="5">
-                                <label for="few_5">5</label>
+                        <div id="few_shot_group" style="display: none; margin-top: 10px;">
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="few_0" value="0" checked>
+                                    <label for="few_0">0 examples</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="few_1" value="1">
+                                    <label for="few_1">1 example</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="few_3" value="3" checked>
+                                    <label for="few_3">3 examples</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="few_5" value="5">
+                                    <label for="few_5">5 examples</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -383,19 +431,44 @@
                     <h3>⚙️ Execution Settings</h3>
                     
                     <div class="form-group">
+                        <label for="algorithm">Optimization Algorithm</label>
+                        <select id="algorithm">
+                            <option value="auto" selected>Auto (based on combinations)</option>
+                            <option value="grid">Grid Search</option>
+                            <option value="random">Random Search</option>
+                            <option value="bayesian">Bayesian Optimization</option>
+                        </select>
+                        <div class="help-text">Algorithm to use for optimization</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="max_trials">Max Trials</label>
+                        <input type="number" id="max_trials" min="1" max="1000" value="">
+                        <div class="help-text">Maximum number of trials (leave empty for auto)</div>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="execution_mode">Execution Mode</label>
                         <select id="execution_mode">
-                            <option value="1" selected>Local (no backend)</option>
-                            <option value="2">Standard (hybrid)</option>
-                            <option value="3">Cloud (full cloud)</option>
+                            <option value="local" selected>Local (no backend)</option>
+                            <option value="cloud">Cloud (TraiGent backend)</option>
+                            <option value="hybrid">Hybrid</option>
                         </select>
+                        <div class="help-text">Where to run the optimization</div>
                     </div>
                     
                     <div class="form-group">
                         <label>
                             <input type="checkbox" id="mock_mode" checked>
-                            Use Mock Mode (no API costs)
+                            Mock Mode (no API costs)
                         </label>
+                        <div class="help-text">Enable to test without making real API calls</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="output_file">Output File (optional)</label>
+                        <input type="text" id="output_file" placeholder="results.json">
+                        <div class="help-text">Save results to a JSON file</div>
                     </div>
                 </div>
             </div>
@@ -404,93 +477,98 @@
                 <div class="section">
                     <h2>📊 Summary</h2>
                     
-                    <div class="metric">
-                        <div class="metric-label">Total Combinations</div>
-                        <div class="metric-value" id="total_combinations">6</div>
+                    <div class="summary-box">
+                        <div class="summary-item">
+                            <span class="summary-label">Total Combinations</span>
+                            <span class="summary-value" id="total_combinations">6</span>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-label">Models</span>
+                            <span class="summary-value" id="model_count">2</span>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-label">Parameters</span>
+                            <span class="summary-value" id="param_count">2</span>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-label">Algorithm</span>
+                            <span class="summary-value" id="algorithm_display">Grid</span>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-label">Max Trials</span>
+                            <span class="summary-value" id="max_trials_display">6</span>
+                        </div>
                     </div>
                     
-                    <div class="metric">
-                        <div class="metric-label">Models</div>
-                        <div class="metric-value" id="model_count">2</div>
-                    </div>
+                    <div id="status_message"></div>
+                </div>
+                
+                <div class="section">
+                    <h2>💻 Generated Command</h2>
                     
-                    <div class="metric">
-                        <div class="metric-label">Parameters</div>
-                        <div class="metric-value" id="param_count">2</div>
+                    <div class="tab-container">
+                        <div class="tabs">
+                            <button class="tab active" onclick="switchTab('direct')">Direct Command</button>
+                            <button class="tab" onclick="switchTab('script')">Bash Script</button>
+                            <button class="tab" onclick="switchTab('python')">Python Script</button>
+                        </div>
+                        
+                        <div id="direct_tab" class="tab-content active">
+                            <div class="command-output" id="direct_command"></div>
+                            <button class="copy-button" onclick="copyCommand('direct_command')">📋 Copy Command</button>
+                        </div>
+                        
+                        <div id="script_tab" class="tab-content">
+                            <div class="command-output" id="bash_script"></div>
+                            <button class="copy-button" onclick="copyCommand('bash_script')">📋 Copy Script</button>
+                        </div>
+                        
+                        <div id="python_tab" class="tab-content">
+                            <div class="command-output" id="python_script"></div>
+                            <button class="copy-button" onclick="copyCommand('python_script')">📋 Copy Script</button>
+                        </div>
                     </div>
-                    
-                    <div id="cost_alert" class="alert alert-success">
-                        ✅ Mock mode enabled (no costs)
-                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div style="padding: 0 30px 30px;">
-            <h2 style="margin-bottom: 20px;">🚀 Generated Command</h2>
-            
-            <div class="tabs">
-                <button class="tab active" onclick="showTab('echo')">Echo Command</button>
-                <button class="tab" onclick="showTab('heredoc')">Heredoc Command</button>
-                <button class="tab" onclick="showTab('python')">Python Script</button>
-            </div>
-            
-            <div id="echo-tab" class="tab-content active">
-                <div class="command-output" id="echo_command">
-                    # Loading...
-                </div>
-                <button class="copy-button" onclick="copyCommand('echo_command')">📋 Copy Command</button>
-            </div>
-            
-            <div id="heredoc-tab" class="tab-content">
-                <div class="command-output" id="heredoc_command">
-                    # Loading...
-                </div>
-                <button class="copy-button" onclick="copyCommand('heredoc_command')">📋 Copy Command</button>
-            </div>
-            
-            <div id="python-tab" class="tab-content">
-                <div class="command-output" id="python_script">
-                    # Loading...
-                </div>
-                <button class="copy-button" onclick="copyCommand('python_script')">📋 Copy Script</button>
-            </div>
-        </div>
-        
-        <div class="info-box" style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 4px; margin-top: 20px;">
-            <h3 style="margin-top: 0; color: #856404;">⚠️ Important: API Key Authentication</h3>
-            <p>If you encounter API key errors when running the CLI, use the auth-fixed version:</p>
-            <div style="background: white; padding: 10px; border-radius: 4px; font-family: monospace; margin: 10px 0;">
-                python traigent_benchmark_cli_with_auth.py
-            </div>
-            <p>This version ensures the TRAIGENT_API_KEY is properly sent with all backend requests.</p>
         </div>
     </div>
     
     <script>
-        function toggleMaxTokens() {
-            const group = document.getElementById('max_tokens_group');
-            group.style.display = document.getElementById('include_max_tokens').checked ? 'flex' : 'none';
+        // Toggle visibility of parameter groups
+        document.getElementById('include_max_tokens').addEventListener('change', function() {
+            document.getElementById('max_tokens_group').style.display = this.checked ? 'block' : 'none';
+            generateCommand();
+        });
+        
+        document.getElementById('include_few_shot').addEventListener('change', function() {
+            document.getElementById('few_shot_group').style.display = this.checked ? 'block' : 'none';
+            generateCommand();
+        });
+        
+        function updateAgentInfo() {
+            const agent = document.getElementById('agent_selection').value;
+            const descriptions = {
+                'support_classifier': 'Customer support ticket classification'
+            };
+            document.getElementById('agent_description').textContent = descriptions[agent] || '';
             generateCommand();
         }
         
-        function toggleFewShot() {
-            const group = document.getElementById('few_shot_group');
-            group.style.display = document.getElementById('include_few_shot').checked ? 'flex' : 'none';
-            generateCommand();
-        }
-        
-        function showTab(tabName) {
+        function switchTab(tabName) {
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
+            document.querySelectorAll('.tab').forEach(button => {
+                button.classList.remove('active');
             });
             
             // Show selected tab
-            document.getElementById(tabName + '-tab').classList.add('active');
+            document.getElementById(tabName + '_tab').classList.add('active');
             event.target.classList.add('active');
         }
         
@@ -526,135 +604,164 @@
             document.getElementById('model_count').textContent = models.length;
             document.getElementById('param_count').textContent = paramCount;
             
-            // Update cost alert
-            const mockMode = document.getElementById('mock_mode').checked;
-            const costAlert = document.getElementById('cost_alert');
-            if (mockMode) {
-                costAlert.className = 'alert alert-success';
-                costAlert.innerHTML = '✅ Mock mode enabled (no costs)';
-            } else {
-                const numExamples = parseInt(document.getElementById('num_examples').value);
-                const estimatedCost = total * numExamples * 0.001;
-                costAlert.className = 'alert alert-warning';
-                costAlert.innerHTML = `⚠️ Estimated cost: $${estimatedCost.toFixed(2)}`;
+            // Determine algorithm
+            const algorithmSelect = document.getElementById('algorithm').value;
+            let algorithm = algorithmSelect;
+            if (algorithmSelect === 'auto') {
+                algorithm = total <= 20 ? 'grid' : 'random';
             }
+            document.getElementById('algorithm_display').textContent = 
+                algorithm.charAt(0).toUpperCase() + algorithm.slice(1);
+            
+            // Determine max trials
+            const maxTrialsInput = document.getElementById('max_trials').value;
+            let maxTrials = maxTrialsInput ? parseInt(maxTrialsInput) : 
+                         (algorithm === 'grid' ? Math.min(total, 100) : 10);
+            document.getElementById('max_trials_display').textContent = maxTrials;
+            
+            // Update status message
+            const statusDiv = document.getElementById('status_message');
+            if (document.getElementById('mock_mode').checked) {
+                statusDiv.className = 'success-box';
+                statusDiv.innerHTML = '✅ Mock mode enabled (no costs)';
+            } else {
+                statusDiv.className = 'warning-box';
+                statusDiv.innerHTML = '⚠️ Real API mode - costs will be incurred';
+            }
+            
+            return { total, models, temps, tokens, fewShot, algorithm, maxTrials };
         }
         
         function generateCommand() {
-            updateSummary();
-            
-            const experimentName = document.getElementById('experiment_name').value;
+            const agent = document.getElementById('agent_selection').value;
             const numExamples = document.getElementById('num_examples').value;
             const samplingStrategy = document.getElementById('sampling_strategy').value;
             const executionMode = document.getElementById('execution_mode').value;
             const mockMode = document.getElementById('mock_mode').checked;
+            const outputFile = document.getElementById('output_file').value;
             
-            const models = getSelectedValues('model_');
-            const temps = getSelectedValues('temp_');
-            const includeMaxTokens = document.getElementById('include_max_tokens').checked;
-            const tokens = includeMaxTokens ? getSelectedValues('tokens_') : [];
-            const includeFewShot = document.getElementById('include_few_shot').checked;
-            const fewShot = includeFewShot ? getSelectedValues('few_') : [];
+            const stats = updateSummary();
             
-            // Build input sequence
-            const inputs = [];
-            inputs.push('2'); // Guided configuration
-            inputs.push(experimentName);
-            inputs.push(numExamples);
-            inputs.push(samplingStrategy);
+            // Build command arguments
+            const args = [`python traigent_cli.py`];
+            args.push(`--agent ${agent}`);
             
-            // Core LLM parameters
-            inputs.push('y'); // Include Core LLM
-            
-            // Model
-            inputs.push('y'); // Include model
-            inputs.push('y'); // Custom values
-            inputs.push(models.join(','));
-            
-            // Temperature
-            inputs.push('y'); // Include temperature
-            inputs.push('y'); // Custom values
-            inputs.push(temps.join(','));
-            
-            // Max tokens
-            if (includeMaxTokens && tokens.length > 0) {
-                inputs.push('y'); // Include max_tokens
-                inputs.push('y'); // Custom values
-                inputs.push(tokens.join(','));
-            } else {
-                inputs.push('n'); // Skip max_tokens
+            // Add model arguments
+            if (stats.models.length > 0) {
+                args.push(`--models ${stats.models.join(' ')}`);
             }
             
-            // Top-p
-            inputs.push('n'); // Skip top_p
-            
-            // Few-shot learning
-            if (includeFewShot && fewShot.length > 0) {
-                inputs.push('y'); // Include few-shot
-                inputs.push('y'); // Include few_shot_k
-                inputs.push('y'); // Custom values
-                inputs.push(fewShot.join(','));
-                inputs.push('n'); // Skip few_shot_strategy
-            } else {
-                inputs.push('n'); // Skip few-shot
+            // Add temperature arguments
+            if (stats.temps.length > 0) {
+                args.push(`--temperature ${stats.temps.join(' ')}`);
             }
             
-            // Skip prompt engineering and context/retrieval
-            inputs.push('n'); // Skip prompt engineering
-            inputs.push('n'); // Skip context/retrieval
+            // Add max tokens if included
+            if (document.getElementById('include_max_tokens').checked && stats.tokens.length > 0) {
+                args.push(`--max-tokens ${stats.tokens.join(' ')}`);
+            }
+            
+            // Add few-shot if included
+            if (document.getElementById('include_few_shot').checked && stats.fewShot.length > 0) {
+                args.push(`--few-shot-k ${stats.fewShot.join(' ')}`);
+            }
+            
+            // Dataset configuration
+            args.push(`--num-examples ${numExamples}`);
+            args.push(`--sampling-strategy ${samplingStrategy}`);
+            
+            // Algorithm configuration
+            const algorithmValue = document.getElementById('algorithm').value;
+            if (algorithmValue !== 'auto') {
+                args.push(`--algorithm ${algorithmValue}`);
+            }
+            
+            const maxTrialsValue = document.getElementById('max_trials').value;
+            if (maxTrialsValue) {
+                args.push(`--max-trials ${maxTrialsValue}`);
+            }
             
             // Execution configuration
-            inputs.push(executionMode);
-            inputs.push(mockMode ? 'y' : 'n');
-            inputs.push('n'); // No early stopping
+            args.push(`--execution-mode ${executionMode}`);
+            if (mockMode) {
+                args.push(`--mock-mode`);
+            }
             
-            // Final confirmations
-            inputs.push('y'); // Proceed
-            inputs.push('y'); // Save config
-            inputs.push('y'); // Run now
+            // Output file
+            if (outputFile) {
+                args.push(`--output ${outputFile}`);
+            }
             
-            // Generate echo command
-            const echoCommand = `# Activate virtual environment and run
-source cli_venv/bin/activate
-echo -e "${inputs.join('\\n')}" | python traigent_benchmark_cli.py`;
+            // Generate direct command
+            const directCommand = args.join(' \\\n    ');
             
-            // Generate heredoc command
-            const heredocCommand = `# Activate virtual environment and run
-source cli_venv/bin/activate
-python traigent_benchmark_cli.py << 'EOF'
-${inputs.join('\\n')}
-EOF`;
+            // Generate bash script
+            const bashScript = `#!/bin/bash
+# TraiGent Optimization Script
+# Generated by TraiGent CLI Generator
+
+# Activate virtual environment if needed
+# source venv/bin/activate
+
+# Run optimization
+${directCommand}
+
+# Check exit code
+if [ $? -eq 0 ]; then
+    echo "✅ Optimization completed successfully!"
+else
+    echo "❌ Optimization failed!"
+    exit 1
+fi`;
             
             // Generate Python script
             const pythonScript = `#!/usr/bin/env python3
-# Generated TraiGent CLI configuration script
+"""
+TraiGent Optimization Script
+Generated by TraiGent CLI Generator
+"""
 
 import subprocess
 import sys
 
-inputs = ${JSON.stringify(inputs, null, 2)}
+# Command arguments
+args = [
+    'python', 'traigent_cli.py',
+    '--agent', '${agent}',
+${stats.models.length > 0 ? `    '--models', ${stats.models.map(m => `'${m}'`).join(', ')},\n` : ''}${stats.temps.length > 0 ? `    '--temperature', ${stats.temps.map(t => `'${t}'`).join(', ')},\n` : ''}${document.getElementById('include_max_tokens').checked && stats.tokens.length > 0 ? `    '--max-tokens', ${stats.tokens.map(t => `'${t}'`).join(', ')},\n` : ''}${document.getElementById('include_few_shot').checked && stats.fewShot.length > 0 ? `    '--few-shot-k', ${stats.fewShot.map(f => `'${f}'`).join(', ')},\n` : ''}    '--num-examples', '${numExamples}',
+    '--sampling-strategy', '${samplingStrategy}',
+${algorithmValue !== 'auto' ? `    '--algorithm', '${algorithmValue}',\n` : ''}${maxTrialsValue ? `    '--max-trials', '${maxTrialsValue}',\n` : ''}    '--execution-mode', '${executionMode}',
+${mockMode ? `    '--mock-mode',\n` : ''}${outputFile ? `    '--output', '${outputFile}',\n` : ''}]
 
-# Run the CLI with the inputs
-process = subprocess.Popen(
-    [sys.executable, 'traigent_benchmark_cli.py'],
-    stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    text=True
-)
+# Run the command
+print("🚀 Starting TraiGent optimization...")
+print(f"Command: {' '.join(args)}")
+print("-" * 50)
 
-output, _ = process.communicate(input='\\\\n'.join(inputs))
-print(output)`;
+result = subprocess.run(args)
+
+# Exit with same code as subprocess
+sys.exit(result.returncode)`;
             
-            document.getElementById('echo_command').textContent = echoCommand;
-            document.getElementById('heredoc_command').textContent = heredocCommand;
+            // Update displays
+            document.getElementById('direct_command').textContent = directCommand;
+            document.getElementById('bash_script').textContent = bashScript;
             document.getElementById('python_script').textContent = pythonScript;
         }
         
         function copyCommand(elementId) {
             const text = document.getElementById(elementId).textContent;
             navigator.clipboard.writeText(text).then(() => {
-                alert('Command copied to clipboard!');
+                // Show success message
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                button.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
             }).catch(err => {
                 alert('Please select and copy the command manually');
             });
@@ -663,6 +770,7 @@ print(output)`;
         // Add event listeners
         document.querySelectorAll('input, select').forEach(element => {
             element.addEventListener('change', generateCommand);
+            element.addEventListener('input', generateCommand);
         });
         
         // Generate initial command

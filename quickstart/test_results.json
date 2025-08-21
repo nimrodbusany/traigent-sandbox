@@ -1,0 +1,19 @@
+{
+  "agent": "support_classifier",
+  "best_config": {
+    "model": "gpt-3.5-turbo",
+    "temperature": 0.5
+  },
+  "best_score": 0.7282889060041392,
+  "trials": 1,
+  "parameters": {
+    "model": [
+      "gpt-3.5-turbo"
+    ],
+    "temperature": [
+      0.5
+    ]
+  },
+  "algorithm": "grid",
+  "max_trials": 1
+}
