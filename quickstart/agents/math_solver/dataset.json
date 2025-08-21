@@ -1,0 +1,618 @@
+{
+  "examples": [
+    {
+      "id": 1,
+      "difficulty": "easy",
+      "input": "x = 7; y = 3; x + y = ?",
+      "expected_output": "10.00"
+    },
+    {
+      "id": 2,
+      "difficulty": "easy", 
+      "input": "a = 12; b = 8; a - b = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 3,
+      "difficulty": "easy",
+      "input": "p = 6; q = 4; p × q = ?",
+      "expected_output": "24.00"
+    },
+    {
+      "id": 4,
+      "difficulty": "easy",
+      "input": "m = 20; n = 5; m ÷ n = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 5,
+      "difficulty": "easy",
+      "input": "x = 3; x^2 = ?",
+      "expected_output": "9.00"
+    },
+    {
+      "id": 6,
+      "difficulty": "easy",
+      "input": "y = 4; 2y + 1 = ?",
+      "expected_output": "9.00"
+    },
+    {
+      "id": 7,
+      "difficulty": "easy",
+      "input": "a = 5; b = 2; 3a - b = ?",
+      "expected_output": "13.00"
+    },
+    {
+      "id": 8,
+      "difficulty": "easy",
+      "input": "x = 16; √x = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 9,
+      "difficulty": "easy",
+      "input": "p = 9; q = 1; p + 2q = ?",
+      "expected_output": "11.00"
+    },
+    {
+      "id": 10,
+      "difficulty": "easy",
+      "input": "r = 10; s = 3; r - 2s = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 11,
+      "difficulty": "easy",
+      "input": "a = 2; b = 5; ab + 3 = ?",
+      "expected_output": "13.00"
+    },
+    {
+      "id": 12,
+      "difficulty": "easy",
+      "input": "x = 6; y = 7; x + y - 4 = ?",
+      "expected_output": "9.00"
+    },
+    {
+      "id": 13,
+      "difficulty": "easy",
+      "input": "m = 8; 15 - m = ?",
+      "expected_output": "7.00"
+    },
+    {
+      "id": 14,
+      "difficulty": "easy",
+      "input": "n = 3; n^3 = ?",
+      "expected_output": "27.00"
+    },
+    {
+      "id": 15,
+      "difficulty": "easy",
+      "input": "x = 25; √x + 2 = ?",
+      "expected_output": "7.00"
+    },
+    {
+      "id": 16,
+      "difficulty": "easy",
+      "input": "a = 4; b = 6; (a + b)/2 = ?",
+      "expected_output": "5.00"
+    },
+    {
+      "id": 17,
+      "difficulty": "easy",
+      "input": "p = 12; q = 3; p/q + 5 = ?",
+      "expected_output": "9.00"
+    },
+    {
+      "id": 18,
+      "difficulty": "easy",
+      "input": "x = 2; y = 8; x^2 + y = ?",
+      "expected_output": "12.00"
+    },
+    {
+      "id": 19,
+      "difficulty": "easy",
+      "input": "r = 7; s = 9; rs - 10 = ?",
+      "expected_output": "53.00"
+    },
+    {
+      "id": 20,
+      "difficulty": "easy",
+      "input": "m = 1; n = 11; 3m + 2n = ?",
+      "expected_output": "25.00"
+    },
+    {
+      "id": 21,
+      "difficulty": "easy",
+      "input": "a = 14; b = 6; a - b + 3 = ?",
+      "expected_output": "11.00"
+    },
+    {
+      "id": 22,
+      "difficulty": "easy",
+      "input": "x = 5; 4x - 7 = ?",
+      "expected_output": "13.00"
+    },
+    {
+      "id": 23,
+      "difficulty": "easy",
+      "input": "y = 36; √y - 1 = ?",
+      "expected_output": "5.00"
+    },
+    {
+      "id": 24,
+      "difficulty": "easy",
+      "input": "p = 3; q = 4; p^2 + q^2 = ?",
+      "expected_output": "25.00"
+    },
+    {
+      "id": 25,
+      "difficulty": "easy",
+      "input": "a = 18; b = 2; a/b - 4 = ?",
+      "expected_output": "5.00"
+    },
+    {
+      "id": 26,
+      "difficulty": "mid",
+      "input": "x = 3/4; y = 1/2; x + y = ?",
+      "expected_output": "1.25"
+    },
+    {
+      "id": 27,
+      "difficulty": "mid",
+      "input": "a = 2/3; b = 3/5; a × b = ?",
+      "expected_output": "0.40"
+    },
+    {
+      "id": 28,
+      "difficulty": "mid",
+      "input": "Find 15% of 80 = ?",
+      "expected_output": "12.00"
+    },
+    {
+      "id": 29,
+      "difficulty": "mid",
+      "input": "r = 5; Area of circle = πr^2 = ?",
+      "expected_output": "78.54"
+    },
+    {
+      "id": 30,
+      "difficulty": "mid",
+      "input": "x = 7; 2x + 3 = 17; Solve: x = ?",
+      "expected_output": "7.00"
+    },
+    {
+      "id": 31,
+      "difficulty": "mid",
+      "input": "sin(30°) = ?",
+      "expected_output": "0.50"
+    },
+    {
+      "id": 32,
+      "difficulty": "mid",
+      "input": "cos(60°) = ?",
+      "expected_output": "0.50"
+    },
+    {
+      "id": 33,
+      "difficulty": "mid",
+      "input": "x = 5; y = 12; √(x^2 + y^2) = ?",
+      "expected_output": "13.00"
+    },
+    {
+      "id": 34,
+      "difficulty": "mid",
+      "input": "Convert 3/8 to decimal = ?",
+      "expected_output": "0.38"
+    },
+    {
+      "id": 35,
+      "difficulty": "mid",
+      "input": "a = 6; b = 8; c = 10; Perimeter = a + b + c = ?",
+      "expected_output": "24.00"
+    },
+    {
+      "id": 36,
+      "difficulty": "mid",
+      "input": "x = 4; y = 9; (x + y)^2 = ?",
+      "expected_output": "169.00"
+    },
+    {
+      "id": 37,
+      "difficulty": "mid",
+      "input": "Find 25% of 144 = ?",
+      "expected_output": "36.00"
+    },
+    {
+      "id": 38,
+      "difficulty": "mid",
+      "input": "a = 2; b = 3; c = 1; a^2 + b^2 - c^2 = ?",
+      "expected_output": "12.00"
+    },
+    {
+      "id": 39,
+      "difficulty": "mid",
+      "input": "tan(45°) = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 40,
+      "difficulty": "mid",
+      "input": "x = 3; y = 4; x^3 + y^2 = ?",
+      "expected_output": "43.00"
+    },
+    {
+      "id": 41,
+      "difficulty": "mid",
+      "input": "r = 7; Circumference = 2πr = ?",
+      "expected_output": "43.98"
+    },
+    {
+      "id": 42,
+      "difficulty": "mid",
+      "input": "a = 5/6; b = 2/3; a - b = ?",
+      "expected_output": "0.17"
+    },
+    {
+      "id": 43,
+      "difficulty": "mid",
+      "input": "x = 64; ∛x = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 44,
+      "difficulty": "mid",
+      "input": "Find 40% of 75 = ?",
+      "expected_output": "30.00"
+    },
+    {
+      "id": 45,
+      "difficulty": "mid",
+      "input": "a = 3; b = 4; c = 5; a^2 + b^2 = c^2? Verify: a^2 + b^2 = ?",
+      "expected_output": "25.00"
+    },
+    {
+      "id": 46,
+      "difficulty": "mid",
+      "input": "x = 2; y = 6; 3x^2 + y = ?",
+      "expected_output": "18.00"
+    },
+    {
+      "id": 47,
+      "difficulty": "mid",
+      "input": "sin(90°) = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 48,
+      "difficulty": "mid",
+      "input": "a = 8; b = 12; GCD(a,b) using Euclidean: a mod b = 8, then b mod 8 = 4, then 8 mod 4 = 0. GCD = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 49,
+      "difficulty": "mid",
+      "input": "x = 1/4; y = 3/4; x + y = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 50,
+      "difficulty": "mid",
+      "input": "r = 6; Area = πr^2 = ?",
+      "expected_output": "113.10"
+    },
+    {
+      "id": 51,
+      "difficulty": "hard",
+      "input": "Solve x^2 - 5x + 6 = 0; Positive root x = ?",
+      "expected_output": "3.00"
+    },
+    {
+      "id": 52,
+      "difficulty": "hard",
+      "input": "log₂(16) = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 53,
+      "difficulty": "hard",
+      "input": "ln(e^3) = ?",
+      "expected_output": "3.00"
+    },
+    {
+      "id": 54,
+      "difficulty": "hard",
+      "input": "sin²(30°) + cos²(30°) = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 55,
+      "difficulty": "hard",
+      "input": "x = 2; (3x + 1)^2 = ?",
+      "expected_output": "49.00"
+    },
+    {
+      "id": 56,
+      "difficulty": "hard",
+      "input": "a = 4; b = 3; c = 5; Law of cosines: c^2 = a^2 + b^2 - 2ab×cos(C); Find cos(C) = ?",
+      "expected_output": "0.00"
+    },
+    {
+      "id": 57,
+      "difficulty": "hard",
+      "input": "tan(π/4) = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 58,
+      "difficulty": "hard",
+      "input": "x = 3; y = 4; |x - y| + |y - x| = ?",
+      "expected_output": "2.00"
+    },
+    {
+      "id": 59,
+      "difficulty": "hard",
+      "input": "log₁₀(1000) = ?",
+      "expected_output": "3.00"
+    },
+    {
+      "id": 60,
+      "difficulty": "hard",
+      "input": "x = 45°; sin(x) × cos(x) = ?",
+      "expected_output": "0.50"
+    },
+    {
+      "id": 61,
+      "difficulty": "hard",
+      "input": "a = 2; b = -3; c = 1; Quadratic formula: x = (-b + √(b^2 - 4ac))/(2a); x = ?",
+      "expected_output": "2.00"
+    },
+    {
+      "id": 62,
+      "difficulty": "hard",
+      "input": "sin(π/6) + cos(π/3) = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 63,
+      "difficulty": "hard",
+      "input": "x = 8; log₂(x) + log₂(x/2) = ?",
+      "expected_output": "5.00"
+    },
+    {
+      "id": 64,
+      "difficulty": "hard",
+      "input": "a = 3; b = 4; (a + bi)(a - bi) = ?",
+      "expected_output": "25.00"
+    },
+    {
+      "id": 65,
+      "difficulty": "hard",
+      "input": "x = π/3; tan(x) = ?",
+      "expected_output": "1.73"
+    },
+    {
+      "id": 66,
+      "difficulty": "hard",
+      "input": "a = 1; b = -2; c = -3; Discriminant = b^2 - 4ac = ?",
+      "expected_output": "16.00"
+    },
+    {
+      "id": 67,
+      "difficulty": "hard",
+      "input": "sin(2π/3) = ?",
+      "expected_output": "0.87"
+    },
+    {
+      "id": 68,
+      "difficulty": "hard",
+      "input": "x = 27; ∛x = ?",
+      "expected_output": "3.00"
+    },
+    {
+      "id": 69,
+      "difficulty": "hard",
+      "input": "a = 5; b = 12; Hypotenuse = √(a^2 + b^2) = ?",
+      "expected_output": "13.00"
+    },
+    {
+      "id": 70,
+      "difficulty": "hard",
+      "input": "x = e; ln(x^2) = ?",
+      "expected_output": "2.00"
+    },
+    {
+      "id": 71,
+      "difficulty": "hard",
+      "input": "cos(π/4) + sin(π/4) = ?",
+      "expected_output": "1.41"
+    },
+    {
+      "id": 72,
+      "difficulty": "hard",
+      "input": "x = 4; y = 3; (x^2 - y^2)/(x - y) = ?",
+      "expected_output": "7.00"
+    },
+    {
+      "id": 73,
+      "difficulty": "hard",
+      "input": "a = 2; Geometric series sum: a + a^2 + a^3 = ?",
+      "expected_output": "14.00"
+    },
+    {
+      "id": 74,
+      "difficulty": "hard",
+      "input": "sin(π/2) - cos(π) = ?",
+      "expected_output": "2.00"
+    },
+    {
+      "id": 75,
+      "difficulty": "hard",
+      "input": "x = 6; y = 8; Distance from origin = √(x^2 + y^2) = ?",
+      "expected_output": "10.00"
+    },
+    {
+      "id": 76,
+      "difficulty": "expert",
+      "input": "f(x) = x^3 - 2x^2 + x; f'(x) at x = 2 = ?",
+      "expected_output": "5.00"
+    },
+    {
+      "id": 77,
+      "difficulty": "expert",
+      "input": "∫₀¹ x^2 dx = ?",
+      "expected_output": "0.33"
+    },
+    {
+      "id": 78,
+      "difficulty": "expert",
+      "input": "z₁ = 3 + 4i; z₂ = 2 - i; z₁ × z₂ = ? (Real part)",
+      "expected_output": "10.00"
+    },
+    {
+      "id": 79,
+      "difficulty": "expert",
+      "input": "f(x) = sin(x); f'(π/4) = ?",
+      "expected_output": "0.71"
+    },
+    {
+      "id": 80,
+      "difficulty": "expert",
+      "input": "lim(x→0) sin(x)/x = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 81,
+      "difficulty": "expert",
+      "input": "∫ e^x dx from 0 to 1 = ?",
+      "expected_output": "1.72"
+    },
+    {
+      "id": 82,
+      "difficulty": "expert",
+      "input": "z = 1 + i; |z|^2 = ?",
+      "expected_output": "2.00"
+    },
+    {
+      "id": 83,
+      "difficulty": "expert",
+      "input": "f(x) = x^4 - 3x^2; f''(x) at x = 1 = ?",
+      "expected_output": "6.00"
+    },
+    {
+      "id": 84,
+      "difficulty": "expert",
+      "input": "∫₁² (1/x) dx = ?",
+      "expected_output": "0.69"
+    },
+    {
+      "id": 85,
+      "difficulty": "expert",
+      "input": "Vector v = (3, 4, 0); |v| = ?",
+      "expected_output": "5.00"
+    },
+    {
+      "id": 86,
+      "difficulty": "expert",
+      "input": "f(x) = e^(2x); f'(0) = ?",
+      "expected_output": "2.00"
+    },
+    {
+      "id": 87,
+      "difficulty": "expert",
+      "input": "cos(2π/3) = ?",
+      "expected_output": "-0.50"
+    },
+    {
+      "id": 88,
+      "difficulty": "expert",
+      "input": "∫ x×e^x dx from 0 to 1 = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 89,
+      "difficulty": "expert",
+      "input": "f(x) = ln(x^2 + 1); f'(1) = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 90,
+      "difficulty": "expert",
+      "input": "Series: 1 + 1/2 + 1/4 + 1/8 + ... (first 4 terms) = ?",
+      "expected_output": "1.88"
+    },
+    {
+      "id": 91,
+      "difficulty": "expert",
+      "input": "Matrix A = [[2,1],[3,4]]; det(A) = ?",
+      "expected_output": "5.00"
+    },
+    {
+      "id": 92,
+      "difficulty": "expert",
+      "input": "z = e^(iπ/4); Real part = ?",
+      "expected_output": "0.71"
+    },
+    {
+      "id": 93,
+      "difficulty": "expert",
+      "input": "f(x) = x^2 sin(x); f'(π) = ?",
+      "expected_output": "-19.74"
+    },
+    {
+      "id": 94,
+      "difficulty": "expert",
+      "input": "∫₀^(π/2) cos(x) dx = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 95,
+      "difficulty": "expert",
+      "input": "Laplace transform: L{e^(2t)} at s = 3 = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 96,
+      "difficulty": "expert",
+      "input": "f(x,y) = x^2 + y^2; ∂f/∂x at (2,3) = ?",
+      "expected_output": "4.00"
+    },
+    {
+      "id": 97,
+      "difficulty": "expert",
+      "input": "Vector cross product: (1,0,0) × (0,1,0) = (a,b,c); Find c = ?",
+      "expected_output": "1.00"
+    },
+    {
+      "id": 98,
+      "difficulty": "expert",
+      "input": "Taylor series: e^x ≈ 1 + x + x^2/2! + x^3/3! at x = 0.5 (first 4 terms) = ?",
+      "expected_output": "1.65"
+    },
+    {
+      "id": 99,
+      "difficulty": "expert",
+      "input": "f(x) = 1/(1+x^2); ∫₋₁¹ f(x) dx = ?",
+      "expected_output": "1.57"
+    },
+    {
+      "id": 100,
+      "difficulty": "expert",
+      "input": "Fourier coefficient: a₁ = (2/π)∫₀^π sin(x)sin(x) dx = ?",
+      "expected_output": "1.00"
+    }
+  ],
+  "metadata": {
+    "name": "Math Problem Solving Dataset",
+    "description": "100 mathematical problems across 4 difficulty levels for testing LLM mathematical reasoning capabilities",
+    "total_examples": 100,
+    "difficulty_levels": {
+      "easy": 25,
+      "mid": 25, 
+      "hard": 25,
+      "expert": 25
+    },
+    "categories": ["easy", "mid", "hard", "expert"],
+    "output_format": "Numerical result rounded to 2 decimal places",
+    "evaluation_metric": "exact_match"
+  }
+}

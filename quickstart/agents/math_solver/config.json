@@ -1,0 +1,117 @@
+{
+  "name": "Math Solver",
+  "description": "Mathematical problem solver across 4 difficulty levels - elementary to engineering mathematics",
+  "version": "1.0.0", 
+  "author": "TraiGent Team",
+  "objectives": ["accuracy", "precision"],
+  "parameter_categories": {
+    "Core LLM": ["model", "temperature", "max_tokens", "top_p"],
+    "Mathematical Reasoning": ["precision_mode", "step_by_step", "verification"],
+    "Problem Solving": ["problem_type_hint", "difficulty_awareness", "mathematical_notation"],
+    "Output Control": ["output_format", "decimal_precision", "rounding_method"]
+  },
+  "parameters": {
+    "model": {
+      "type": "categorical",
+      "values": ["gpt-3.5-turbo", "gpt-4o-mini", "gpt-4o", "gpt-4", "claude-3-sonnet", "claude-3-opus"],
+      "default": "gpt-4o-mini",
+      "description": "LLM model optimized for mathematical reasoning"
+    },
+    "temperature": {
+      "type": "continuous", 
+      "values": [0.0, 0.1, 0.2, 0.3, 0.5],
+      "default": 0.0,
+      "description": "Low temperature for consistent mathematical calculations"
+    },
+    "max_tokens": {
+      "type": "discrete",
+      "values": [10, 20, 50, 100],
+      "default": 20,
+      "description": "Token limit for numerical answers"
+    },
+    "top_p": {
+      "type": "continuous",
+      "values": [0.1, 0.3, 0.5, 0.8, 1.0],
+      "default": 0.1,
+      "description": "Nucleus sampling for focused mathematical responses"
+    },
+    "precision_mode": {
+      "type": "categorical",
+      "values": ["standard", "high_precision", "exact"],
+      "default": "high_precision",
+      "description": "Mathematical precision requirements"
+    },
+    "step_by_step": {
+      "type": "boolean",
+      "values": [true, false],
+      "default": false,
+      "description": "Enable step-by-step reasoning (internal only)"
+    },
+    "verification": {
+      "type": "boolean", 
+      "values": [true, false],
+      "default": true,
+      "description": "Enable answer verification"
+    },
+    "problem_type_hint": {
+      "type": "categorical",
+      "values": ["none", "arithmetic", "algebra", "trigonometry", "calculus"],
+      "default": "none",
+      "description": "Hint about problem type for context"
+    },
+    "difficulty_awareness": {
+      "type": "boolean",
+      "values": [true, false],
+      "default": true,
+      "description": "Make model aware of problem difficulty level"
+    },
+    "mathematical_notation": {
+      "type": "categorical",
+      "values": ["standard", "latex", "unicode"],
+      "default": "standard",
+      "description": "Mathematical notation style"
+    },
+    "output_format": {
+      "type": "categorical",
+      "values": ["number_only", "number_with_units", "formatted"],
+      "default": "number_only",
+      "description": "Output format specification"
+    },
+    "decimal_precision": {
+      "type": "discrete",
+      "values": [2],
+      "default": 2,
+      "description": "Number of decimal places (fixed at 2)"
+    },
+    "rounding_method": {
+      "type": "categorical",
+      "values": ["round_half_up", "round_half_even", "truncate"],
+      "default": "round_half_up",
+      "description": "Rounding method for final answer"
+    }
+  },
+  "dataset": {
+    "file": "dataset.json",
+    "format": "json",
+    "categories": ["easy", "mid", "hard", "expert"],
+    "total_examples": 100,
+    "difficulty_distribution": {
+      "easy": 25,
+      "mid": 25,
+      "hard": 25,
+      "expert": 25
+    }
+  },
+  "execution": {
+    "default_algorithm": "grid",
+    "default_max_trials": 15,
+    "supported_modes": ["local", "cloud", "hybrid"],
+    "evaluation_metric": "exact_match",
+    "tolerance": 0.005
+  },
+  "system_prompts": {
+    "base": "You are a precise mathematical calculator. Solve the given mathematical problem and output ONLY the numerical result rounded to exactly 2 decimal places. No explanations, no working, no additional text.",
+    "with_difficulty": "You are solving a {difficulty} level mathematical problem. Output ONLY the numerical result rounded to exactly 2 decimal places.",
+    "high_precision": "You are a high-precision mathematical calculator. For the given problem, calculate the exact result and round to exactly 2 decimal places using standard rounding rules. Output only the number."
+  }
+}

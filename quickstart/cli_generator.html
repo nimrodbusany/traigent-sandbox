@@ -293,10 +293,15 @@
                         <label for="agent_selection">Agent</label>
                         <select id="agent_selection" onchange="updateAgentInfo()">
                             <option value="support_classifier" selected>Support Classifier</option>
+                            <option value="math_solver">Math Solver</option>
                             <!-- Add more agents as they become available -->
                         </select>
                         <div class="help-text" id="agent_description">
-                            Customer support ticket classification
+                            Customer support ticket classification into technical, billing, or general categories
+                        </div>
+                        
+                        <div id="agent_info_box" class="success-box" style="margin-top: 15px; display: none;">
+                            <div id="agent_details"></div>
                         </div>
                     </div>
                     
@@ -338,6 +343,14 @@
                             <div class="checkbox-item">
                                 <input type="checkbox" id="model_gpt4" value="gpt-4">
                                 <label for="model_gpt4">GPT-4</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="model_claude_sonnet" value="claude-3-5-sonnet">
+                                <label for="model_claude_sonnet">Claude 3.5 Sonnet</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="model_claude_opus" value="claude-3-opus">
+                                <label for="model_claude_opus">Claude 3 Opus</label>
                             </div>
                         </div>
                     </div>
@@ -552,10 +565,129 @@
         function updateAgentInfo() {
             const agent = document.getElementById('agent_selection').value;
             const descriptions = {
-                'support_classifier': 'Customer support ticket classification'
+                'support_classifier': 'Customer support ticket classification into technical, billing, or general categories',
+                'math_solver': 'Mathematical problem solving across 4 difficulty levels (elementary to engineering)'
             };
+            
+            // Update description
             document.getElementById('agent_description').textContent = descriptions[agent] || '';
+            
+            // Show detailed agent information
+            const agentInfoBox = document.getElementById('agent_info_box');
+            const agentDetails = document.getElementById('agent_details');
+            
+            const detailedInfo = {
+                'support_classifier': {
+                    show: true,
+                    content: `
+                        <strong>📋 Support Classifier Details:</strong><br>
+                        • <strong>Dataset:</strong> 25 customer support tickets<br>
+                        • <strong>Categories:</strong> Technical, Billing, General<br>
+                        • <strong>Task:</strong> Text classification<br>
+                        • <strong>Best Models:</strong> GPT-3.5-turbo, GPT-4o-mini<br>
+                        • <strong>Optimal Temp:</strong> 0.0-0.5 for consistency
+                    `
+                },
+                'math_solver': {
+                    show: true,
+                    content: `
+                        <strong>🧮 Math Solver Details:</strong><br>
+                        • <strong>Dataset:</strong> 100 mathematical problems<br>
+                        • <strong>Difficulty:</strong> Easy (25), Mid (25), Hard (25), Expert (25)<br>
+                        • <strong>Task:</strong> Numerical calculation (2 decimal places)<br>
+                        • <strong>Best Models:</strong> GPT-4o, Claude 3.5 Sonnet, GPT-4o-mini<br>
+                        • <strong>Optimal Temp:</strong> 0.0-0.2 for precise calculations
+                    `
+                }
+            };
+            
+            const info = detailedInfo[agent];
+            if (info && info.show) {
+                agentDetails.innerHTML = info.content;
+                agentInfoBox.style.display = 'block';
+            } else {
+                agentInfoBox.style.display = 'none';
+            }
+            
+            // Update max examples based on agent dataset size
+            const maxExamplesInput = document.getElementById('num_examples');
+            const maxExamplesByAgent = {
+                'support_classifier': 25,
+                'math_solver': 100
+            };
+            
+            const maxExamples = maxExamplesByAgent[agent] || 100;
+            maxExamplesInput.setAttribute('max', maxExamples);
+            
+            // Update default number of examples
+            const defaultExamples = {
+                'support_classifier': 10,
+                'math_solver': 20
+            };
+            
+            if (maxExamplesInput.value == '' || parseInt(maxExamplesInput.value) > maxExamples) {
+                maxExamplesInput.value = defaultExamples[agent] || 10;
+            }
+            
+            // Update help text for number of examples
+            const helpText = maxExamplesInput.parentNode.querySelector('.help-text');
+            helpText.textContent = `Number of examples to use from the dataset (max ${maxExamples})`;
+            
+            // Set agent-specific defaults
+            if (agent === 'math_solver') {
+                setMathSolverDefaults();
+            } else if (agent === 'support_classifier') {
+                setSupportClassifierDefaults();
+            }
+            
             generateCommand();
+        }
+        
+        function setMathSolverDefaults() {
+            // Uncheck all models first
+            document.querySelectorAll('input[id^="model_"]').forEach(cb => cb.checked = false);
+            
+            // Check math-friendly models
+            document.getElementById('model_gpt4mini').checked = true;
+            document.getElementById('model_gpt4o').checked = true;
+            document.getElementById('model_claude_sonnet').checked = true;
+            
+            // Set low temperatures for consistent math calculations
+            document.querySelectorAll('input[id^="temp_"]').forEach(cb => cb.checked = false);
+            document.getElementById('temp_0').checked = true;
+            document.getElementById('temp_3').checked = true;
+            
+            // Enable max tokens with math-appropriate values
+            document.getElementById('include_max_tokens').checked = true;
+            document.getElementById('max_tokens_group').style.display = 'block';
+            document.querySelectorAll('input[id^="tokens_"]').forEach(cb => cb.checked = false);
+            document.getElementById('tokens_10').checked = true;
+            document.getElementById('tokens_20').checked = true;
+            
+            // Disable few-shot for math (pure calculation)
+            document.getElementById('include_few_shot').checked = false;
+            document.getElementById('few_shot_group').style.display = 'none';
+        }
+        
+        function setSupportClassifierDefaults() {
+            // Reset to support classifier defaults
+            document.querySelectorAll('input[id^="model_"]').forEach(cb => cb.checked = false);
+            document.getElementById('model_gpt35').checked = true;
+            document.getElementById('model_gpt4mini').checked = true;
+            
+            // Standard temperatures for classification
+            document.querySelectorAll('input[id^="temp_"]').forEach(cb => cb.checked = false);
+            document.getElementById('temp_0').checked = true;
+            document.getElementById('temp_5').checked = true;
+            document.getElementById('temp_10').checked = true;
+            
+            // Disable max tokens for classification (use defaults)
+            document.getElementById('include_max_tokens').checked = false;
+            document.getElementById('max_tokens_group').style.display = 'none';
+            
+            // Disable few-shot by default
+            document.getElementById('include_few_shot').checked = false;
+            document.getElementById('few_shot_group').style.display = 'none';
         }
         
         function switchTab(tabName) {

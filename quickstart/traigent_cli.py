@@ -250,8 +250,18 @@ class TraiGentCLI:
         else:
             os.environ["TRAIGENT_MOCK_MODE"] = "false"
             os.environ["TRAIGENT_EXECUTION_MODE"] = execution_config.get('mode', 'local')
+            print("🔥 Real API mode ENABLED - API costs WILL be incurred")
+            print(f"   Environment: TRAIGENT_MOCK_MODE={os.environ.get('TRAIGENT_MOCK_MODE')}")
+            print(f"   Environment: TRAIGENT_EXECUTION_MODE={os.environ.get('TRAIGENT_EXECUTION_MODE')}")
+            
+            # Check if API keys are available
+            openai_key = os.environ.get('OPENAI_API_KEY')
+            anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
+            print(f"   OpenAI API Key: {'✅ Present' if openai_key and openai_key.startswith('sk-') else '❌ Missing'}")
+            print(f"   Anthropic API Key: {'✅ Present' if anthropic_key and anthropic_key.startswith('sk-ant') else '❌ Missing'}")
+            
             if execution_config.get('mode') != 'local':
-                print("🔥 Real API mode ENABLED - API costs will be incurred")
+                print("🔥 Cloud API mode ENABLED - API costs will be incurred")
         
         # Get agent components
         agent_module = agent_info.module
@@ -410,21 +420,124 @@ class TraiGentCLI:
             print(f"   Best score: {results.best_score:.4f}")
             print(f"   Best config: {json.dumps(results.best_config, indent=2)}")
             
+            # Calculate total cost from trials
+            total_cost = 0.0
+            total_tokens = 0
+            for trial in results.trials:
+                # Check for cost in trial's direct attributes
+                if hasattr(trial, 'cost') and trial.cost:
+                    total_cost += trial.cost
+                
+                # Check for cost in trial metrics (where it's actually stored)
+                if hasattr(trial, 'metrics') and trial.metrics:
+                    # Check for cost in metrics dict - this is where the tokencost values are stored
+                    if 'cost' in trial.metrics:
+                        total_cost += trial.metrics.get('cost', 0.0)
+                    if 'total_cost' in trial.metrics:
+                        total_cost += trial.metrics.get('total_cost', 0.0)
+                    if 'input_cost' in trial.metrics and 'output_cost' in trial.metrics:
+                        total_cost += trial.metrics.get('input_cost', 0.0) + trial.metrics.get('output_cost', 0.0)
+                    # Check for tokens in metrics
+                    if 'total_tokens' in trial.metrics:
+                        total_tokens += trial.metrics.get('total_tokens', 0)
+                
+                # Also check metadata as a fallback
+                if hasattr(trial, 'metadata') and trial.metadata:
+                    # Check for cost in metadata
+                    if 'cost' in trial.metadata:
+                        total_cost += trial.metadata.get('cost', 0.0)
+                    if 'total_cost' in trial.metadata:
+                        total_cost += trial.metadata.get('total_cost', 0.0)
+                    # Check for tokens
+                    if 'total_tokens' in trial.metadata:
+                        total_tokens += trial.metadata.get('total_tokens', 0)
+            
+            if total_cost > 0:
+                print(f"   Total cost: ${total_cost:.6f}")
+            if total_tokens > 0:
+                print(f"   Total tokens: {total_tokens:,}")
+            
+            # Debug: Show trial details
+            if args.verbose and results.trials:
+                print(f"\n🔍 Trial details:")
+                for i, trial in enumerate(results.trials):
+                    print(f"   Trial {i+1}: score={trial.metrics.get('accuracy', 0.0):.4f}")
+                    
+                    # Get cost from metrics (where it's actually stored)
+                    cost = 0.0
+                    tokens = 0
+                    
+                    if hasattr(trial, 'metrics') and trial.metrics:
+                        cost = max(
+                            trial.metrics.get('cost', 0.0),
+                            trial.metrics.get('total_cost', 0.0),
+                            trial.metrics.get('input_cost', 0.0) + trial.metrics.get('output_cost', 0.0)
+                        )
+                        tokens = trial.metrics.get('total_tokens', 0)
+                    
+                    # Fallback to metadata
+                    if cost == 0.0 and hasattr(trial, 'metadata') and trial.metadata:
+                        cost = trial.metadata.get('total_cost', trial.metadata.get('cost', 0.0))
+                        if tokens == 0:
+                            tokens = trial.metadata.get('total_tokens', 0)
+                    
+                    if cost > 0:
+                        print(f"     Cost: ${cost:.6f}")
+                    if tokens > 0:
+                        print(f"     Tokens: {tokens:,}")
+            
             # Save results if requested
             if args.output:
                 output_path = Path(args.output)
                 output_path.parent.mkdir(parents=True, exist_ok=True)
                 
+                # Prepare detailed results including cost
+                detailed_results = {
+                    'agent': args.agent,
+                    'best_config': results.best_config,
+                    'best_score': results.best_score,
+                    'trials': len(results.trials),
+                    'parameters': param_space,
+                    'algorithm': algorithm,
+                    'max_trials': max_trials,
+                    'total_cost': total_cost,
+                    'total_tokens': total_tokens
+                }
+                
+                # Add trial details if verbose
+                if args.verbose:
+                    detailed_results['trial_details'] = []
+                    for i, trial in enumerate(results.trials):
+                        trial_info = {
+                            'trial_number': i + 1,
+                            'config': trial.config,
+                            'score': trial.metrics.get('accuracy', 0.0),
+                            'metrics': trial.metrics
+                        }
+                        # Get cost from metrics (where it's actually stored)
+                        cost = 0.0
+                        tokens = 0
+                        
+                        if hasattr(trial, 'metrics') and trial.metrics:
+                            cost = max(
+                                trial.metrics.get('cost', 0.0),
+                                trial.metrics.get('total_cost', 0.0),
+                                trial.metrics.get('input_cost', 0.0) + trial.metrics.get('output_cost', 0.0)
+                            )
+                            tokens = trial.metrics.get('total_tokens', 0)
+                        
+                        # Fallback to metadata
+                        if cost == 0.0 and hasattr(trial, 'metadata') and trial.metadata:
+                            cost = trial.metadata.get('total_cost', trial.metadata.get('cost', 0.0))
+                            if tokens == 0:
+                                tokens = trial.metadata.get('total_tokens', 0)
+                        
+                        trial_info['cost'] = cost
+                        trial_info['tokens'] = tokens
+                        detailed_results['trial_details'].append(trial_info)
+                
                 with open(output_path, 'w') as f:
-                    json.dump({
-                        'agent': args.agent,
-                        'best_config': results.best_config,
-                        'best_score': results.best_score,
-                        'trials': len(results.trials),
-                        'parameters': param_space,
-                        'algorithm': algorithm,
-                        'max_trials': max_trials
-                    }, f, indent=2)
+                    json.dump(detailed_results, f, indent=2)
                 
                 print(f"\n💾 Results saved to: {output_path}")
             

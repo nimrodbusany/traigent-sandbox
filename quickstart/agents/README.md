@@ -19,6 +19,16 @@ agents/
 
 ### support_classifier
 Customer support ticket classification into technical, billing, or general categories.
+- **Dataset**: 25 customer support examples
+- **Categories**: Technical, Billing, General
+- **Task Type**: Text classification
+
+### math_solver
+Mathematical problem solving across 4 difficulty levels from elementary to engineering mathematics.
+- **Dataset**: 100 mathematical problems
+- **Difficulty Levels**: Easy (25), Mid (25), Hard (25), Expert (25)
+- **Task Type**: Numerical calculation with 2 decimal precision
+- **Covers**: Arithmetic, Algebra, Trigonometry, Calculus, Complex Numbers
 
 ## Creating a New Agent
 

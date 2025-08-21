@@ -1,0 +1,45 @@
+{
+  "agent": "support_classifier",
+  "best_config": {
+    "model": "gpt-3.5-turbo",
+    "temperature": 0.5
+  },
+  "best_score": 0.0,
+  "trials": 1,
+  "parameters": {
+    "model": [
+      "gpt-3.5-turbo"
+    ],
+    "temperature": [
+      0.5
+    ]
+  },
+  "algorithm": "grid",
+  "max_trials": 1,
+  "total_cost": 0.0,
+  "total_tokens": 0,
+  "trial_details": [
+    {
+      "trial_number": 1,
+      "config": {
+        "model": "gpt-3.5-turbo",
+        "temperature": 0.5
+      },
+      "score": 0.0,
+      "metrics": {
+        "accuracy": 0.0,
+        "score": 0.0,
+        "duration": 2.7045631408691406,
+        "input_tokens": 11.0,
+        "output_tokens": 1.333333,
+        "total_tokens": 12.333333,
+        "response_time_ms": 901.484013,
+        "cost": 0.0,
+        "total_examples": 3,
+        "successful_examples": 3
+      },
+      "cost": 0.0,
+      "tokens": 0
+    }
+  ]
+}
