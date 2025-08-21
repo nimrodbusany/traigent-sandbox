@@ -76,26 +76,19 @@ aiohttp.ClientSession.__init__ = patched_session_init
 
 import openai
 
-from load_env import load_demo_env
+# load_env import moved below to use load_demo_env_once
 from shared_utils.mock_llm import setup_mock_mode
 
-# Try to import intelligent mock first, then fallback to basic mock
-try:
-    from intelligent_mock_patch import setup_mock_environment, patch_openai
-except ImportError:
-    try:
-        from mock_openai_patch import setup_mock_environment, patch_openai
-    except ImportError:
-        # Fallback implementation if no mock patches are available
-        def setup_mock_environment():
-            """Fallback mock environment setup"""
-            os.environ["TRAIGENT_MOCK_MODE"] = "true"
-            os.environ["SKIP_API_KEY_CHECK"] = "true"
-            
-        def patch_openai():
-            """Fallback OpenAI patch using TraiGent's built-in mocking"""
-            # TraiGent has its own mocking system, we'll rely on that
-            pass
+# Import the simple mock setup that respects existing API keys
+# No need for OpenAI patching - TraiGent handles it internally
+def setup_mock_environment():
+    """Enable TraiGent's built-in mock mode."""
+    # Just enable TraiGent's mock mode - it handles everything internally
+    os.environ["TRAIGENT_MOCK_MODE"] = "true"
+    os.environ["TRAIGENT_EXECUTION_MODE"] = "local"
+    
+    # Don't overwrite API keys - TraiGent's mock mode works with real keys present
+    print("✅ TraiGent mock mode enabled - no API costs will be incurred")
 
 import traigent
 
@@ -124,8 +117,9 @@ except ImportError:
     # If traigent.cloud.models is not available, continue without this fix
     pass
 
-# Load environment variables first
-load_demo_env()
+# Load environment variables first (only if not already loaded)
+from load_env import load_demo_env_once
+load_demo_env_once()
 
 # Add parent directory for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -915,13 +909,17 @@ class TraiGentBenchmarkCLI:
         
         # Set up mock mode if needed
         if config.execution['mock_mode']:
-            setup_mock_environment()  # Use the more robust mock setup
-            patch_openai()  # Ensure OpenAI is patched
-            # Force local mode for mock to avoid backend calls
+            # Force enable TraiGent's mock mode (override .env file)
+            os.environ["TRAIGENT_MOCK_MODE"] = "true"
             os.environ["TRAIGENT_EXECUTION_MODE"] = "local"
+            print("✅ TraiGent mock mode ENABLED - no API costs will be incurred")
+            print("   All API calls will be mocked by TraiGent internally")
         else:
-            # Use cloud mode for real execution to ensure backend receives data
+            # Disable mock mode for real API calls
+            os.environ["TRAIGENT_MOCK_MODE"] = "false" 
             os.environ["TRAIGENT_EXECUTION_MODE"] = "cloud"
+            print("🔥 Real API mode ENABLED - API costs will be incurred")
+            print("   Using real OpenAI API calls")
         
         # Initialize prompt builder and example selector
         prompt_builder = PromptBuilder()

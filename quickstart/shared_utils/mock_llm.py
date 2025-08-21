@@ -13,24 +13,27 @@ def setup_mock_mode() -> bool:
     Returns:
         True if mock mode was activated
     """
-    # Force mock mode setup
+    # Enable TraiGent's built-in mock mode
     os.environ["TRAIGENT_MOCK_MODE"] = "true"
     
-    # Check if we have mock keys or need to set them
+    # Check if we have real API keys already
     current_openai = os.environ.get("OPENAI_API_KEY", "")
     current_anthropic = os.environ.get("ANTHROPIC_API_KEY", "")
     
-    # If keys are empty or already mock keys, set/ensure mock keys
-    if not current_openai or "mock" in current_openai.lower():
-        os.environ["OPENAI_API_KEY"] = "mock-key-for-demos"
+    # Only set mock keys if NO keys are present (preserve real keys)
+    if not current_openai:
+        # Only set a mock key if there's no key at all
+        os.environ["OPENAI_API_KEY"] = "sk-mock-traigent-placeholder"
     
-    if not current_anthropic or "mock" in current_anthropic.lower():
-        os.environ["ANTHROPIC_API_KEY"] = "mock-key-for-demos"
+    if not current_anthropic:
+        # Only set a mock key if there's no key at all  
+        os.environ["ANTHROPIC_API_KEY"] = "sk-ant-mock-traigent-placeholder"
     
-    # Also set execution mode to local for mock
+    # Set execution mode to local for mock
     os.environ["TRAIGENT_EXECUTION_MODE"] = "local"
     
-    print("✅ Mock mode activated - no API costs will be incurred")
+    print("✅ TraiGent mock mode activated - no API costs will be incurred")
+    print("   TraiGent will handle all mocking internally")
     return True
 
 

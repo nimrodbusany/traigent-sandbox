@@ -50,6 +50,7 @@ env.bak/
 venv.bak/
 cli_venv/
 test_venv/
+quickstart_venv/
 
 # Environment files (keep template but not actual env files)
 .env

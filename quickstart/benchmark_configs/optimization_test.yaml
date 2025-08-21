@@ -5,7 +5,7 @@ dataset:
 execution:
   algorithm: grid
   early_stopping: false
-  max_trials: 18
+  max_trials: 12
   mock_mode: true
   mode: local
 name: optimization_test
@@ -22,7 +22,6 @@ parameters:
     param_type: discrete
     values:
     - 0.0
-    - 1.0
     - 3.0
   model:
     description: LLM model to use
@@ -38,4 +37,4 @@ parameters:
     values:
     - 0.0
     - 0.5
-    - 0.7
+    - 1.0

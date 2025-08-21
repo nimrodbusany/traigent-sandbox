@@ -140,18 +140,31 @@ def patch_openai():
 
 
 def setup_mock_environment():
-    """Set up complete mock environment for TraiGent demos."""
+    """Set up TraiGent's built-in mock environment.
     
-    # Set environment variables
+    This function now just enables TraiGent's mock mode without
+    overwriting API keys or patching OpenAI directly.
+    TraiGent handles all mocking internally.
+    """
+    
+    # Enable TraiGent's built-in mock mode
     os.environ["TRAIGENT_MOCK_MODE"] = "true"
-    os.environ["OPENAI_API_KEY"] = "mock-key-for-demos"
-    os.environ["ANTHROPIC_API_KEY"] = "mock-key-for-demos"
+    
+    # Preserve existing API keys - only set mock keys if none exist
+    if not os.environ.get("OPENAI_API_KEY"):
+        os.environ["OPENAI_API_KEY"] = "sk-mock-traigent-placeholder"
+    
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        os.environ["ANTHROPIC_API_KEY"] = "sk-ant-mock-traigent-placeholder"
+    
+    # Set execution mode to local for mock
     os.environ["TRAIGENT_EXECUTION_MODE"] = "local"
     
-    # Patch OpenAI
-    patch_openai()
+    # Don't patch OpenAI - let TraiGent handle it
+    # patch_openai() - REMOVED: TraiGent handles this internally
     
-    print("✅ Intelligent mock environment configured")
+    print("✅ TraiGent mock environment configured")
+    print("   TraiGent will handle all mocking internally")
 
 
 # Auto-patch when imported in mock mode

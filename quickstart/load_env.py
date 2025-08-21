@@ -40,6 +40,16 @@ TRAIGENT_MOCK_MODE=true
         load_demo_env()
 
 
+# Track if already loaded to prevent duplicate loading
+_env_loaded = False
+
+def load_demo_env_once():
+    """Load environment only once to prevent override of runtime changes."""
+    global _env_loaded
+    if not _env_loaded:
+        load_demo_env()
+        _env_loaded = True
+
 # Auto-load when imported
 if __name__ != "__main__":
-    load_demo_env()
+    load_demo_env_once()
