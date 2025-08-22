@@ -1,15 +1,14 @@
 {
   "agent": "livebench_competition_math",
   "best_config": {
-    "model": "gpt-4o-mini",
+    "model": "gpt-3.5-turbo",
     "temperature": 0.5
   },
   "best_score": 0.7580546942100689,
   "trials": 1,
   "parameters": {
     "model": [
-      "gpt-4o-mini",
-      "claude-3-5-sonnet"
+      "gpt-3.5-turbo"
     ],
     "temperature": [
       0.5
@@ -17,6 +16,6 @@
   },
   "algorithm": "grid",
   "max_trials": 1,
-  "total_cost": 0.0,
+  "total_cost": 0.001166,
   "total_tokens": 588.0
 }
