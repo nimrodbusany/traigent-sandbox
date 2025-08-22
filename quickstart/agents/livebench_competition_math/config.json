@@ -1,0 +1,137 @@
+{
+  "name": "LiveBench Math",
+  "description": "LiveBench mathematical problem solving with flexible prompt engineering",
+  "version": "2.0.0",
+  "author": "TraiGent Team",
+  "livebench_integration": {
+    "source": "https://github.com/livebench/livebench",
+    "dataset": "livebench/livebench",
+    "categories": ["math_competition_problems", "amps_hard", "proof_rearrangement"],
+    "evaluation": "LiveBench ground-truth judgment"
+  },
+  "objectives": ["accuracy", "cost"],
+  "parameter_categories": {
+    "Core LLM": ["model", "temperature", "max_tokens", "top_p"],
+    "Few-Shot Learning": ["few_shot_k", "few_shot_strategy"],
+    "Prompt Engineering": ["system_role", "reasoning_style", "problem_approach", "answer_format", "notation_style", "verification_style", "cot_style"],
+    "Domain Specific": ["domain", "custom_instructions"],
+    "Presets": ["preset_template"]
+  },
+  "parameters": {
+    "model": {
+      "type": "categorical",
+      "values": ["gpt-3.5-turbo", "gpt-4o-mini", "gpt-4o", "gpt-4", "claude-3-opus", "claude-3-sonnet", "claude-3-haiku"],
+      "default": "gpt-4o",
+      "description": "LLM model to use (strong models recommended for math)"
+    },
+    "temperature": {
+      "type": "continuous",
+      "values": [0.0, 0.1, 0.2, 0.3, 0.5],
+      "default": 0.1,
+      "description": "Low temperature for consistent mathematical reasoning"
+    },
+    "max_tokens": {
+      "type": "discrete",
+      "values": [500, 1000, 1500, 2000],
+      "default": 1000,
+      "description": "Token limit for mathematical solutions"
+    },
+    "top_p": {
+      "type": "continuous",
+      "values": [0.9, 0.95, 1.0],
+      "default": 0.95,
+      "description": "Nucleus sampling threshold"
+    },
+    "few_shot_k": {
+      "type": "discrete",
+      "values": [0, 1, 2, 3, 5],
+      "default": 0,
+      "description": "Number of LiveBench examples to include"
+    },
+    "few_shot_strategy": {
+      "type": "categorical",
+      "values": ["random", "similar", "diverse"],
+      "default": "similar",
+      "description": "Strategy for selecting LiveBench examples"
+    },
+    "system_role": {
+      "type": "categorical",
+      "values": ["none", "minimal", "standard", "expert", "olympiad", "educator", "researcher"],
+      "default": "minimal",
+      "description": "System role for the assistant"
+    },
+    "reasoning_style": {
+      "type": "categorical",
+      "values": ["none", "basic", "detailed", "analytical", "competition", "creative", "rigorous"],
+      "default": "none",
+      "description": "How the model should approach reasoning"
+    },
+    "problem_approach": {
+      "type": "categorical",
+      "values": ["direct", "decompose", "pattern", "construct", "contradict", "induction"],
+      "default": "direct",
+      "description": "Strategy for solving problems"
+    },
+    "answer_format": {
+      "type": "categorical",
+      "values": ["minimal", "boxed", "explained", "step_numbered", "latex", "competition"],
+      "default": "minimal",
+      "description": "How to format the answer"
+    },
+    "notation_style": {
+      "type": "categorical",
+      "values": ["standard", "latex", "plain", "verbal", "mixed"],
+      "default": "standard",
+      "description": "Mathematical notation preference"
+    },
+    "verification_style": {
+      "type": "categorical",
+      "values": ["none", "basic", "thorough", "explain", "constraints"],
+      "default": "none",
+      "description": "How to verify answers"
+    },
+    "cot_style": {
+      "type": "categorical",
+      "values": ["none", "basic", "detailed", "reflective", "structured"],
+      "default": "none",
+      "description": "Chain of thought style"
+    },
+    "domain": {
+      "type": "categorical",
+      "values": [null, "algebra", "geometry", "number_theory", "combinatorics", "calculus", "probability"],
+      "default": null,
+      "description": "Mathematical domain for specialized prompts"
+    },
+    "custom_instructions": {
+      "type": "text",
+      "default": "",
+      "description": "Additional custom instructions for the model"
+    },
+    "preset_template": {
+      "type": "categorical",
+      "values": ["none", "livebench_minimal", "livebench_standard", "competition_solver", "detailed_educator", "rigorous_proof"],
+      "default": "none",
+      "description": "Use a preset parameter combination"
+    }
+  },
+  "preset_descriptions": {
+    "livebench_minimal": "Minimal prompting like LiveBench uses",
+    "livebench_standard": "Standard LiveBench with basic reasoning", 
+    "competition_solver": "Optimized for competition math problems",
+    "detailed_educator": "Educational approach with detailed explanations",
+    "rigorous_proof": "Formal mathematical proofs with LaTeX"
+  },
+  "dataset": {
+    "source": "LiveBench HuggingFace",
+    "format": "json",
+    "categories": ["math_competition_problems", "amps_hard", "proof_rearrangement"],
+    "download_command": "python download_livebench_simple.py",
+    "evaluation": "LiveBench ground-truth judgment"
+  },
+  "execution": {
+    "default_algorithm": "grid",
+    "default_max_trials": 20,
+    "supported_modes": ["local", "cloud", "hybrid"],
+    "notes": "Flexible prompt engineering for LiveBench optimization"
+  }
+}

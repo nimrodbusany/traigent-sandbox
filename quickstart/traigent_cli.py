@@ -12,6 +12,8 @@ import json
 import os
 import sys
 import tempfile
+import time
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass
@@ -19,6 +21,8 @@ import importlib.util
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
+# Also add Traigent directory specifically
+sys.path.insert(0, str(Path(__file__).parent.parent / "Traigent"))
 
 # Load environment variables
 from load_env import load_demo_env_once
@@ -26,6 +30,10 @@ load_demo_env_once()
 
 try:
     import traigent
+    from traigent.utils.callbacks import (
+        DetailedProgressCallback,
+        SimpleProgressCallback
+    )
 except ImportError:
     print("❌ TraiGent not found. Please install it first:")
     print("   pip install -e ../Traigent")
@@ -242,14 +250,15 @@ class TraiGentCLI:
         print(f"   Algorithm: {execution_config.get('algorithm', 'grid')}")
         print(f"   Mode: {execution_config.get('mode', 'local')}")
         
-        # Set up mock mode if needed
+        # Set up mock mode - FORCE override environment variables if needed
         if execution_config.get('mock_mode', False):
+            # Force override any .env settings for mock mode
             os.environ["TRAIGENT_MOCK_MODE"] = "true"
             os.environ["TRAIGENT_EXECUTION_MODE"] = "local"
             print("✅ TraiGent mock mode ENABLED - no API costs will be incurred")
+            print(f"   Environment: TRAIGENT_MOCK_MODE={os.environ.get('TRAIGENT_MOCK_MODE')}")
+            print(f"   Environment: TRAIGENT_EXECUTION_MODE={os.environ.get('TRAIGENT_EXECUTION_MODE')}")
         else:
-            os.environ["TRAIGENT_MOCK_MODE"] = "false"
-            os.environ["TRAIGENT_EXECUTION_MODE"] = execution_config.get('mode', 'local')
             print("🔥 Real API mode ENABLED - API costs WILL be incurred")
             print(f"   Environment: TRAIGENT_MOCK_MODE={os.environ.get('TRAIGENT_MOCK_MODE')}")
             print(f"   Environment: TRAIGENT_EXECUTION_MODE={os.environ.get('TRAIGENT_EXECUTION_MODE')}")
@@ -296,17 +305,45 @@ class TraiGentCLI:
         # Get objectives from config
         objectives = agent_info.config.get('objectives', ['accuracy'])
         
-        # Apply TraiGent optimization decorator
+        # Apply TraiGent optimization decorator with parallel configuration
+        parallel_config = {
+            'parallel_trials': execution_config.get('parallel_trials'),
+            'batch_size': execution_config.get('batch_size'),
+            'max_workers': execution_config.get('max_workers'),
+            'adaptive_batching': execution_config.get('adaptive_batching', False)
+        }
+        
+        # Log parallel configuration
+        if parallel_config['parallel_trials'] and parallel_config['parallel_trials'] > 1:
+            print(f"   Parallel trials: {parallel_config['parallel_trials']} (between-trial parallelism)")
+        if parallel_config['batch_size'] and parallel_config['batch_size'] > 1:
+            print(f"   Batch size: {parallel_config['batch_size']} (within-trial parallelism)")
+        if parallel_config['max_workers'] and parallel_config['max_workers'] > 1:
+            print(f"   Max workers: {parallel_config['max_workers']} (batch processing)")
+        if parallel_config['adaptive_batching']:
+            print(f"   Adaptive batching: enabled")
+        
         optimized_function = traigent.optimize(
             eval_dataset=dataset_file,
             objectives=objectives,
             configuration_space=config_space,
             max_trials=max_trials,
             algorithm=execution_config.get('algorithm', 'grid'),
-            execution_mode=execution_config.get('mode', 'local')
+            execution_mode=execution_config.get('mode', 'local'),
+            **{k: v for k, v in parallel_config.items() if v is not None}
         )(base_function)
         
         return optimized_function
+    
+    def _create_progress_callback(self, progress_mode: str):
+        """Create progress callback based on mode selection."""
+        if progress_mode == 'none':
+            return None
+        elif progress_mode == 'detailed':
+            print("🎯 Using detailed progress tracking...")
+            return DetailedProgressCallback(show_config_details=True, show_metrics=True)
+        else:  # 'simple' mode
+            return SimpleProgressCallback(output="print", show_details=True)
     
     def run_optimization(self, args):
         """Run optimization with command-line arguments."""
@@ -342,6 +379,22 @@ class TraiGentCLI:
         # Handle few_shot_k
         if args.few_shot_k:
             param_space['few_shot_k'] = args.few_shot_k
+            
+        # Handle LiveBench-specific parameters
+        livebench_params = {
+            'system_role': 'system_role',
+            'reasoning_style': 'reasoning_style', 
+            'problem_approach': 'problem_approach',
+            'answer_format': 'answer_format',
+            'notation_style': 'notation_style',
+            'verification_style': 'verification_style',
+            'cot_style': 'cot_style',
+            'preset_template': 'preset_template'
+        }
+        
+        for param_name, arg_name in livebench_params.items():
+            if hasattr(args, arg_name) and getattr(args, arg_name) is not None:
+                param_space[param_name] = [getattr(args, arg_name)]
             
         # If no parameters specified, use defaults from config
         if not param_space:
@@ -392,7 +445,11 @@ class TraiGentCLI:
             'algorithm': algorithm,
             'max_trials': max_trials,
             'mode': args.execution_mode,
-            'mock_mode': args.mock_mode
+            'mock_mode': args.mock_mode,
+            'parallel_trials': args.parallel_trials,
+            'batch_size': args.batch_size,
+            'max_workers': args.max_workers,
+            'adaptive_batching': args.adaptive_batching
         }
         
         # Create optimized function
@@ -400,20 +457,27 @@ class TraiGentCLI:
             self.current_agent, dataset_file, param_space, exec_config
         )
         
+        # Get objectives for progress callback
+        objectives = self.current_agent.config.get('objectives', ['accuracy'])
+        
+        # Setup progress callback
+        callback = self._create_progress_callback(args.progress)
+        
         print(f"\n🔄 Starting optimization...")
         print(f"   Algorithm: {algorithm}")
         print(f"   Max trials: {max_trials}")
         print(f"   Mock mode: {args.mock_mode}")
         
         try:
-            # Run optimization
-            async def run_optimization():
-                results = await optimized_function.optimize()
-                return results
+            # Run optimization with TraiGent's native callback system
+            callback_list = [callback] if callback else []
             
-            # Run the async optimization
-            loop = asyncio.get_event_loop()
-            results = loop.run_until_complete(run_optimization())
+            # Use asyncio.run() for proper async handling
+            results = asyncio.run(optimized_function.optimize(
+                algorithm=algorithm,
+                max_trials=max_trials,
+                callbacks=callback_list
+            ))
             
             # Display results
             print(f"\n✅ Optimization completed!")
@@ -639,6 +703,63 @@ Examples:
         help='Number of few-shot examples to test (e.g., 0 3 5)'
     )
     
+    # Agent-specific parameters (LiveBench Competition Math)
+    parser.add_argument(
+        '--system-role',
+        choices=['none', 'minimal', 'standard', 'expert', 'olympiad', 'educator', 'researcher'],
+        default=None,
+        help='System role for the assistant (LiveBench agent)'
+    )
+    
+    parser.add_argument(
+        '--reasoning-style',
+        choices=['none', 'basic', 'detailed', 'analytical', 'competition', 'creative', 'rigorous'],
+        default=None,
+        help='How the model should approach reasoning (LiveBench agent)'
+    )
+    
+    parser.add_argument(
+        '--problem-approach',
+        choices=['direct', 'decompose', 'pattern', 'construct', 'contradict', 'induction'],
+        default=None,
+        help='Strategy for solving problems (LiveBench agent)'
+    )
+    
+    parser.add_argument(
+        '--answer-format',
+        choices=['minimal', 'boxed', 'explained', 'step_numbered', 'latex', 'competition'],
+        default=None,
+        help='How to format the answer (LiveBench agent)'
+    )
+    
+    parser.add_argument(
+        '--notation-style',
+        choices=['standard', 'latex', 'plain', 'verbal', 'mixed'],
+        default=None,
+        help='Mathematical notation preference (LiveBench agent)'
+    )
+    
+    parser.add_argument(
+        '--verification-style',
+        choices=['none', 'basic', 'thorough', 'explain', 'constraints'],
+        default=None,
+        help='How to verify answers (LiveBench agent)'
+    )
+    
+    parser.add_argument(
+        '--cot-style',
+        choices=['none', 'basic', 'detailed', 'reflective', 'structured'],
+        default=None,
+        help='Chain of thought style (LiveBench agent)'
+    )
+    
+    parser.add_argument(
+        '--preset-template',
+        choices=['none', 'livebench_minimal', 'livebench_standard', 'competition_solver', 'detailed_educator', 'rigorous_proof'],
+        default=None,
+        help='Use a preset parameter combination (LiveBench agent)'
+    )
+    
     # Dataset configuration
     parser.add_argument(
         '--num-examples',
@@ -669,6 +790,35 @@ Examples:
         help='Maximum number of trials (default: 10 for random, all for grid up to 100)'
     )
     
+    # Parallel execution configuration
+    parser.add_argument(
+        '--parallel-trials',
+        type=int,
+        default=None,
+        help='Number of parallel trials (between-trial parallelism, default: 1 for sequential)'
+    )
+    
+    parser.add_argument(
+        '--batch-size',
+        type=int,
+        default=None,
+        help='Batch size for within-trial parallelism (default: 10)'
+    )
+    
+    parser.add_argument(
+        '--max-workers',
+        type=int,
+        default=None,
+        help='Maximum number of workers for batch processing (default: 4)'
+    )
+    
+    parser.add_argument(
+        '--adaptive-batching',
+        action='store_true',
+        default=False,
+        help='Enable adaptive batch sizing based on performance'
+    )
+    
     # Execution configuration
     parser.add_argument(
         '--execution-mode',
@@ -695,6 +845,14 @@ Examples:
         '--verbose',
         action='store_true',
         help='Enable verbose output'
+    )
+    
+    parser.add_argument(
+        '--progress',
+        type=str,
+        choices=['none', 'simple', 'detailed'],
+        default='simple',
+        help='Progress tracking mode: none (no progress), simple (basic), detailed (comprehensive)'
     )
     
     return parser

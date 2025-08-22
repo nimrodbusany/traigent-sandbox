@@ -51,6 +51,8 @@ venv.bak/
 cli_venv/
 test_venv/
 quickstart_venv/
+livebench_env/
+traigent_test_env/
 
 # Environment files (keep template but not actual env files)
 .env
@@ -94,6 +96,17 @@ old_scripts/
 !support_classification_dataset.json
 /quickstart/cache/
 
+# Result files from optimization runs
+quickstart/*_test.json
+quickstart/*_results.json
+quickstart/final_cost_test.json
+
+# LiveBench downloads and temp files
+livebench/
+download_livebench*.py
+
 # Keep important config files
 !benchmark_configs/
 !*.yaml
+!quickstart/agents/*/config.json
+!quickstart/agents/*/dataset.json

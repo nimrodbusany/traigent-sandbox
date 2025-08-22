@@ -294,6 +294,7 @@
                         <select id="agent_selection" onchange="updateAgentInfo()">
                             <option value="support_classifier" selected>Support Classifier</option>
                             <option value="math_solver">Math Solver</option>
+                            <option value="livebench_competition_math">LiveBench Competition Math</option>
                             <!-- Add more agents as they become available -->
                         </select>
                         <div class="help-text" id="agent_description">
@@ -351,6 +352,10 @@
                             <div class="checkbox-item">
                                 <input type="checkbox" id="model_claude_opus" value="claude-3-opus">
                                 <label for="model_claude_opus">Claude 3 Opus</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="model_claude_haiku" value="claude-3-haiku">
+                                <label for="model_claude_haiku">Claude 3 Haiku</label>
                             </div>
                         </div>
                     </div>
@@ -440,6 +445,14 @@
                     </div>
                 </div>
                 
+                <!-- Dynamic Agent-Specific Parameters Section -->
+                <div class="section" id="agent_parameters_section" style="display: none;">
+                    <h3>🎯 Agent-Specific Parameters</h3>
+                    <div id="agent_parameters_content">
+                        <!-- Dynamically populated based on agent selection -->
+                    </div>
+                </div>
+                
                 <div class="section">
                     <h3>⚙️ Execution Settings</h3>
                     
@@ -468,6 +481,47 @@
                             <option value="hybrid">Hybrid</option>
                         </select>
                         <div class="help-text">Where to run the optimization</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="progress_mode">Progress Tracking</label>
+                        <select id="progress_mode">
+                            <option value="simple" selected>Simple (clean progress)</option>
+                            <option value="detailed">Detailed (comprehensive info)</option>
+                            <option value="none">None (silent mode)</option>
+                        </select>
+                        <div class="help-text">Level of progress information to display</div>
+                    </div>
+                    
+                    <!-- Parallel Execution Configuration -->
+                    <h3>⚡ Parallel Execution</h3>
+                    
+                    <div class="form-group">
+                        <label for="parallel_trials">Parallel Trials</label>
+                        <input type="number" id="parallel_trials" min="1" max="16" value="">
+                        <div class="help-text">Number of parallel trials (between-trial parallelism, leave empty for sequential)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="batch_size">Batch Size</label>
+                        <input type="number" id="batch_size" min="1" max="100" value="">
+                        <div class="help-text">Batch size for within-trial parallelism (default: 10)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="max_workers">Max Workers</label>
+                        <input type="number" id="max_workers" min="1" max="32" value="">
+                        <div class="help-text">Maximum number of workers for batch processing (default: 4)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="adaptive_batching">
+                                <span>Adaptive Batching</span>
+                            </label>
+                        </div>
+                        <div class="help-text">Enable adaptive batch sizing based on performance</div>
                     </div>
                     
                     <div class="form-group">
@@ -551,6 +605,64 @@
     </div>
     
     <script>
+        // Agent parameter schemas - dynamically discovered from agent configs
+        const agentParameterSchemas = {
+            'livebench_competition_math': {
+                'prompt_engineering': {
+                    'system_role': {
+                        type: 'categorical',
+                        values: ['none', 'minimal', 'standard', 'expert', 'olympiad', 'educator', 'researcher'],
+                        default: 'minimal',
+                        description: 'System role for the assistant'
+                    },
+                    'reasoning_style': {
+                        type: 'categorical',
+                        values: ['none', 'basic', 'detailed', 'analytical', 'competition', 'creative', 'rigorous'],
+                        default: 'none',
+                        description: 'How the model should approach reasoning'
+                    },
+                    'problem_approach': {
+                        type: 'categorical',
+                        values: ['direct', 'decompose', 'pattern', 'construct', 'contradict', 'induction'],
+                        default: 'direct',
+                        description: 'Strategy for solving problems'
+                    },
+                    'answer_format': {
+                        type: 'categorical',
+                        values: ['minimal', 'boxed', 'explained', 'step_numbered', 'latex', 'competition'],
+                        default: 'minimal',
+                        description: 'How to format the answer'
+                    },
+                    'notation_style': {
+                        type: 'categorical',
+                        values: ['standard', 'latex', 'plain', 'verbal', 'mixed'],
+                        default: 'standard',
+                        description: 'Mathematical notation preference'
+                    },
+                    'verification_style': {
+                        type: 'categorical',
+                        values: ['none', 'basic', 'thorough', 'explain', 'constraints'],
+                        default: 'none',
+                        description: 'How to verify answers'
+                    },
+                    'cot_style': {
+                        type: 'categorical',
+                        values: ['none', 'basic', 'detailed', 'reflective', 'structured'],
+                        default: 'none',
+                        description: 'Chain of thought style'
+                    }
+                },
+                'presets': {
+                    'preset_template': {
+                        type: 'categorical',
+                        values: ['none', 'livebench_minimal', 'livebench_standard', 'competition_solver', 'detailed_educator', 'rigorous_proof'],
+                        default: 'none',
+                        description: 'Use a preset parameter combination'
+                    }
+                }
+            }
+        };
+        
         // Toggle visibility of parameter groups
         document.getElementById('include_max_tokens').addEventListener('change', function() {
             document.getElementById('max_tokens_group').style.display = this.checked ? 'block' : 'none';
@@ -562,11 +674,91 @@
             generateCommand();
         });
         
+        function renderAgentParameters(agent) {
+            const container = document.getElementById('agent_parameters_content');
+            const section = document.getElementById('agent_parameters_section');
+            
+            // Clear existing content
+            container.innerHTML = '';
+            
+            // Check if agent has custom parameters
+            if (!agentParameterSchemas[agent]) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            const schema = agentParameterSchemas[agent];
+            
+            // Render each parameter category
+            Object.entries(schema).forEach(([category, params]) => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'parameter-category';
+                categoryDiv.style.marginBottom = '20px';
+                
+                // Category title
+                const categoryTitle = document.createElement('h4');
+                categoryTitle.textContent = category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                categoryTitle.style.color = '#667eea';
+                categoryTitle.style.marginBottom = '10px';
+                categoryDiv.appendChild(categoryTitle);
+                
+                // Render each parameter in the category
+                Object.entries(params).forEach(([paramName, paramConfig]) => {
+                    const paramDiv = document.createElement('div');
+                    paramDiv.className = 'form-group';
+                    paramDiv.style.marginBottom = '15px';
+                    
+                    const label = document.createElement('label');
+                    label.textContent = paramName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    label.setAttribute('for', `agent_param_${paramName}`);
+                    paramDiv.appendChild(label);
+                    
+                    if (paramConfig.type === 'categorical') {
+                        // Create dropdown for categorical parameters
+                        const select = document.createElement('select');
+                        select.id = `agent_param_${paramName}`;
+                        select.className = 'agent-parameter';
+                        select.dataset.paramName = paramName;
+                        
+                        paramConfig.values.forEach(value => {
+                            const option = document.createElement('option');
+                            option.value = value;
+                            option.textContent = value;
+                            if (value === paramConfig.default) {
+                                option.selected = true;
+                            }
+                            select.appendChild(option);
+                        });
+                        
+                        select.addEventListener('change', generateCommand);
+                        paramDiv.appendChild(select);
+                    }
+                    
+                    // Add help text
+                    if (paramConfig.description) {
+                        const helpText = document.createElement('div');
+                        helpText.className = 'help-text';
+                        helpText.textContent = paramConfig.description;
+                        paramDiv.appendChild(helpText);
+                    }
+                    
+                    categoryDiv.appendChild(paramDiv);
+                });
+                
+                container.appendChild(categoryDiv);
+            });
+        }
+        
         function updateAgentInfo() {
             const agent = document.getElementById('agent_selection').value;
+            
+            // Render agent-specific parameters
+            renderAgentParameters(agent);
             const descriptions = {
                 'support_classifier': 'Customer support ticket classification into technical, billing, or general categories',
-                'math_solver': 'Mathematical problem solving across 4 difficulty levels (elementary to engineering)'
+                'math_solver': 'Mathematical problem solving across 4 difficulty levels (elementary to engineering)',
+                'livebench_competition_math': 'LiveBench mathematical competition problems (AMC, AIME, IMO, proofs) with flexible prompt engineering'
             };
             
             // Update description
@@ -598,6 +790,19 @@
                         • <strong>Best Models:</strong> GPT-4o, Claude 3.5 Sonnet, GPT-4o-mini<br>
                         • <strong>Optimal Temp:</strong> 0.0-0.2 for precise calculations
                     `
+                },
+                'livebench_competition_math': {
+                    show: true,
+                    content: `
+                        <strong>🏆 LiveBench Competition Math Details:</strong><br>
+                        • <strong>Dataset:</strong> 50 LiveBench competition problems<br>
+                        • <strong>Types:</strong> Olympiad (AMC/AIME/IMO), AMPS Hard, Proof Tasks<br>
+                        • <strong>Task:</strong> Exact match evaluation (formula ordering, integers, proofs)<br>
+                        • <strong>Best Models:</strong> GPT-4o, GPT-4, Claude 3 Opus<br>
+                        • <strong>Features:</strong> Flexible prompt engineering with 7+ parameters<br>
+                        • <strong>Presets:</strong> Minimal, Competition, Educator, Rigorous Proof<br>
+                        • <strong>Optimal Temp:</strong> 0.0-0.1 for consistent reasoning
+                    `
                 }
             };
             
@@ -613,7 +818,8 @@
             const maxExamplesInput = document.getElementById('num_examples');
             const maxExamplesByAgent = {
                 'support_classifier': 25,
-                'math_solver': 100
+                'math_solver': 100,
+                'livebench_competition_math': 50
             };
             
             const maxExamples = maxExamplesByAgent[agent] || 100;
@@ -622,7 +828,8 @@
             // Update default number of examples
             const defaultExamples = {
                 'support_classifier': 10,
-                'math_solver': 20
+                'math_solver': 20,
+                'livebench_competition_math': 10
             };
             
             if (maxExamplesInput.value == '' || parseInt(maxExamplesInput.value) > maxExamples) {
@@ -638,6 +845,8 @@
                 setMathSolverDefaults();
             } else if (agent === 'support_classifier') {
                 setSupportClassifierDefaults();
+            } else if (agent === 'livebench_competition_math') {
+                setLiveBenchDefaults();
             }
             
             generateCommand();
@@ -686,6 +895,29 @@
             document.getElementById('max_tokens_group').style.display = 'none';
             
             // Disable few-shot by default
+            document.getElementById('include_few_shot').checked = false;
+            document.getElementById('few_shot_group').style.display = 'none';
+        }
+        
+        function setLiveBenchDefaults() {
+            // Reset to LiveBench competition math defaults
+            document.querySelectorAll('input[id^="model_"]').forEach(cb => cb.checked = false);
+            document.getElementById('model_gpt4o').checked = true;
+            document.getElementById('model_gpt4').checked = true;
+            
+            // Very low temperatures for consistent mathematical reasoning
+            document.querySelectorAll('input[id^="temp_"]').forEach(cb => cb.checked = false);
+            document.getElementById('temp_0').checked = true;
+            document.getElementById('temp_1').checked = true;
+            
+            // Enable max tokens for complex mathematical proofs
+            document.getElementById('include_max_tokens').checked = true;
+            document.getElementById('max_tokens_group').style.display = 'block';
+            document.querySelectorAll('input[id^="tokens_"]').forEach(cb => cb.checked = false);
+            document.getElementById('tokens_10').checked = true;
+            document.getElementById('tokens_15').checked = true;
+            
+            // Disable few-shot by default (LiveBench uses minimal prompting)
             document.getElementById('include_few_shot').checked = false;
             document.getElementById('few_shot_group').style.display = 'none';
         }
@@ -798,6 +1030,16 @@
                 args.push(`--few-shot-k ${stats.fewShot.join(' ')}`);
             }
             
+            // Add agent-specific parameters
+            document.querySelectorAll('.agent-parameter').forEach(select => {
+                const paramName = select.dataset.paramName;
+                const value = select.value;
+                if (value && value !== 'none') {
+                    const paramFlag = '--' + paramName.replace(/_/g, '-');
+                    args.push(`${paramFlag} ${value}`);
+                }
+            });
+            
             // Dataset configuration
             args.push(`--num-examples ${numExamples}`);
             args.push(`--sampling-strategy ${samplingStrategy}`);
@@ -815,6 +1057,34 @@
             
             // Execution configuration
             args.push(`--execution-mode ${executionMode}`);
+            
+            // Progress tracking configuration
+            const progressMode = document.getElementById('progress_mode').value;
+            if (progressMode && progressMode !== 'simple') {  // simple is default
+                args.push(`--progress ${progressMode}`);
+            }
+            
+            // Parallel execution configuration
+            const parallelTrials = document.getElementById('parallel_trials').value;
+            if (parallelTrials && parseInt(parallelTrials) > 1) {
+                args.push(`--parallel-trials ${parallelTrials}`);
+            }
+            
+            const batchSize = document.getElementById('batch_size').value;
+            if (batchSize && parseInt(batchSize) > 1) {
+                args.push(`--batch-size ${batchSize}`);
+            }
+            
+            const maxWorkers = document.getElementById('max_workers').value;
+            if (maxWorkers && parseInt(maxWorkers) > 1) {
+                args.push(`--max-workers ${maxWorkers}`);
+            }
+            
+            const adaptiveBatching = document.getElementById('adaptive_batching').checked;
+            if (adaptiveBatching) {
+                args.push(`--adaptive-batching`);
+            }
+            
             if (mockMode) {
                 args.push(`--mock-mode`);
             }
@@ -863,7 +1133,7 @@ args = [
 ${stats.models.length > 0 ? `    '--models', ${stats.models.map(m => `'${m}'`).join(', ')},\n` : ''}${stats.temps.length > 0 ? `    '--temperature', ${stats.temps.map(t => `'${t}'`).join(', ')},\n` : ''}${document.getElementById('include_max_tokens').checked && stats.tokens.length > 0 ? `    '--max-tokens', ${stats.tokens.map(t => `'${t}'`).join(', ')},\n` : ''}${document.getElementById('include_few_shot').checked && stats.fewShot.length > 0 ? `    '--few-shot-k', ${stats.fewShot.map(f => `'${f}'`).join(', ')},\n` : ''}    '--num-examples', '${numExamples}',
     '--sampling-strategy', '${samplingStrategy}',
 ${algorithmValue !== 'auto' ? `    '--algorithm', '${algorithmValue}',\n` : ''}${maxTrialsValue ? `    '--max-trials', '${maxTrialsValue}',\n` : ''}    '--execution-mode', '${executionMode}',
-${mockMode ? `    '--mock-mode',\n` : ''}${outputFile ? `    '--output', '${outputFile}',\n` : ''}]
+${progressMode && progressMode !== 'simple' ? `    '--progress', '${progressMode}',\n` : ''}${parallelTrials && parseInt(parallelTrials) > 1 ? `    '--parallel-trials', '${parallelTrials}',\n` : ''}${batchSize && parseInt(batchSize) > 1 ? `    '--batch-size', '${batchSize}',\n` : ''}${maxWorkers && parseInt(maxWorkers) > 1 ? `    '--max-workers', '${maxWorkers}',\n` : ''}${adaptiveBatching ? `    '--adaptive-batching',\n` : ''}${mockMode ? `    '--mock-mode',\n` : ''}${outputFile ? `    '--output', '${outputFile}',\n` : ''}]
 
 # Run the command
 print("🚀 Starting TraiGent optimization...")
@@ -905,7 +1175,8 @@ sys.exit(result.returncode)`;
             element.addEventListener('input', generateCommand);
         });
         
-        // Generate initial command
+        // Initialize agent info and generate initial command
+        updateAgentInfo();
         generateCommand();
     </script>
 </body>
